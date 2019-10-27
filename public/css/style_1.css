@@ -278,3 +278,16 @@ nav ul li a:hover {
 	width: 100%;
 	overflow: hidden;
 }
+
+.recipe_display {
+	margin-bottom: 20vh;
+}
+
+.recipe_display h2 {
+	margin: 0;
+}
+
+.recipe_display img {
+	float: left;
+	height: 20vh;
+}

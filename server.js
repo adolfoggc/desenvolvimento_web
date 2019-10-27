@@ -27,6 +27,46 @@ app.use(expressLayouts)
  */
 app.use(cookieParser());
 
+
+
+
+//funções
+function titulo_aleatorio(){
+	titulos = ['Dovahkiin', 'Peixe-boi', 'Cavaleiro de Cisne', 'Gyarados', 'Polenta', 'Tiamat', 'Ermenegildo', 'Tripanossoma Cruzi', 'Lazytown', 'Pepe Le Peau']
+	return rand = titulos[Math.floor(Math.random() * titulos.length)];
+}
+
+function criar_arquivo(nome, conteudo){
+	fs.writeFile(nome, conteudo, function (err) {
+  	if (err) throw err;
+  	frase = 'Arquivo Criado, '+ titulo_aleatorio();
+  	console.log(frase);
+	});  
+}
+
+function pegue_dados_receita(numero){
+	arquivo = 'public/data/'+numero+'.json';
+	fs.readFile(arquivo, (err, dados) => {
+	  if (err) {
+	    console.error(err)
+	    return
+	  }
+	  dados = JSON.parse(dados);
+	  nota = 0;
+	  for(let count = 0; count<dados["avaliacoes"].length; count++){
+	  	nota = nota + parseInt(dados["avaliacoes"][count][1]);
+	  }
+	  nota = nota/dados["avaliacoes"].length;
+	  informacao = [numero, dados["nome_receita"], nota];
+	  
+	}).on('end', function() {
+  // use the devices array in here
+  	return informacao;
+	});
+}
+
+//coisas sérias
+
 app.get('/', (req, res) => {
 
 
@@ -37,14 +77,14 @@ app.get('/', (req, res) => {
 		receitas = new  Array();
 		
 		files.forEach(file => {
-    	
-			var filename = path.basename('/Users/Refsnes/'+file, '.json');
+			var filename = path.basename(file, '.json');
     	receitas.push(filename);
-    	console.log(filename);
-
   	});
-		
+  	var dadosReceitas = new Array; 
+		var count_receita = 0;
 
+		
+			
 		// Carrega cookie
 		var ultimaReceita = req.cookies.ultimaReceita;
 
@@ -58,25 +98,29 @@ app.get('/', (req, res) => {
 
 
 		// Carrega cookies de preferências
-	var style = req.cookies.style;
-	var size = req.cookies.size;
-	// Visualizacao de conteudo do cookie
-	if (style != undefined) {
-		console.log('Estilo: '+ style +'\n');
-	} else {
-		console.log('Sem Estilo\n');
-		style = "style_1";
-	}
-	if (size != undefined) {
-		console.log('Tamanho: '+ size+'\n');
-	} else {
-		console.log('Sem Tamanho\n');
-		size = 2;
-	}
+		var style = req.cookies.style;
+		var size = req.cookies.size;
+		// Visualizacao de conteudo do cookie
+		if (style != undefined) {
+			console.log('Estilo: '+ style +'\n');
+		} else {
+			console.log('Sem Estilo\n');
+			style = "style_1";
+		}
+		if (size != undefined) {
+			console.log('Tamanho: '+ size+'\n');
+		} else {
+			console.log('Sem Tamanho\n');
+			size = 2;
+		}
 
-		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas});
-	});
-})	
+		//criar arquivo, se não existir
+		criar_arquivo("public/data/recipes.json", "hohohohoho");
+		console.log(pegue_dados_receita("1"));
+		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas});
+
+	}); //fim readdir
+});	
 
 ///////////////////////////////////////////
 

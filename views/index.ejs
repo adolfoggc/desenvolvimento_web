@@ -2,19 +2,23 @@
 
 
 <%- contentFor('secao') %>
-<div class="container_cabecalho">
 <% if(ultimaReceita != 0) {%>
-  <h1 id="nome_receita">
-    Última Receita
-  </h1>
+
+<% } %>
+a
+<%- dadosReceitas %>
+a
+<% var count = 0; %>
+<% for( ;count< receitas.length ; count++) { %>
+  <% if(receitas[count] != ultimaReceita) { %>
+	  <div class="recipe_display">
+	    <h2 id="nome_receita">
+	      receita <%- count+1 %>
+	    </h2>
+	    	<% path_da_imagem = "/imagens/receitas/"+receitas[count]+".jpg" %>
+	    	<img src="<%-path_da_imagem%>">
+	  </div>
+  <% } %>
 <% } %>
 
 </div>
-<% var count = 0; %>
-<% for( ;count< receitas.length ; count++) { %>
-  <div class="container_cabecalho">
-    <h1 id="nome_receita">
-      receita <%- count+1 %>
-    </h1>
-  </div>
-<% } %>
