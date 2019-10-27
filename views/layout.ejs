@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title id="titulo">Tudo Gorduroso - Comeu, morreu!</title>
+    <% var estilo = "css/"+ style + ".css"%>
+    <link rel="stylesheet" type="text/css" href="<%- estilo %>">
+    <link rel="shortcut icon" href="/imagens/logo/logo_16.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Gabriela|Kotta+One&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div>
+        <ul>
+          <li>
+            <img src="/imagens/logo/logo_140.png">
+            <a href="#" id="nome_site">TUDO GORDUROSO</a>
+          </li>
+          <div style="float: right;">
+            <li>
+              <a class="botao_fake" href="/">Receitas</a>
+            </li>
+            <li>
+              <a class="botao_fake" href="/config">Configurações</a>
+            </li>
+            <li>
+              <a class="botao_fake" href="/contato">Contato</a>
+            </li>
+          </div>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <%- secao %>
+    </div>
+    <script src="https://kit.fontawesome.com/2ae28d83d1.js" crossorigin="anonymous"></script>
+    <!-- JS -->
+    <script src="/js/script.js"></script>
+    <script>
+      var sizes = ["4px", "8px", "16px", "24px", "32px", "36px"];
+      var actual_size = <%- parseInt(size) %>;
+
+      function change_size( up_or_down ){
+        if(up_or_down == "+"){
+          if(actual_size+1 < sizes.length) {
+            actual_size = actual_size + 1;
+          }
+        } else if (up_or_down == "-") {
+          if(actual_size > 0) {
+            actual_size = actual_size - 1;
+          }
+        }
+        
+        return sizes[actual_size];
+      }
+
+      function font_up(){
+        document.body.style.fontSize = change_size("+");
+        setCookie("size", actual_size, 10);
+      }
+
+      function font_down(){
+        document.body.style.fontSize = change_size("-");
+        setCookie("size", actual_size, 10);
+      }
+
+      function set_size(desired_size){
+        desired_size = parseInt(desired_size);
+        for( ; (desired_size - actual_size) > 0 ; actual_size++){
+          font_up();
+        }
+        for( ; (desired_size - actual_size) < 0 ; actual_size--){
+          font_down();
+        } 
+      }
+
+      function reset(){
+        deleteCookie("style");
+        deleteCookie("size");
+        console.log("Resetado!");
+        changeCSS("style_1", "style_2");
+        set_size(2);
+      }
+
+      set_size(<%- size %>);
+    </script>
+  </body>
+</html>  

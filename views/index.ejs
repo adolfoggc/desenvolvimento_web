@@ -1,0 +1,20 @@
+
+
+
+<%- contentFor('secao') %>
+<div class="container_cabecalho">
+<% if(ultimaReceita != 0) {%>
+  <h1 id="nome_receita">
+    Última Receita
+  </h1>
+<% } %>
+
+</div>
+<% var count = 0; %>
+<% for( ;count< receitas.length ; count++) { %>
+  <div class="container_cabecalho">
+    <h1 id="nome_receita">
+      receita <%- count+1 %>
+    </h1>
+  </div>
+<% } %>

@@ -1,0 +1,17 @@
+<%- contentFor('secao1') %>
+<div class="jumbotron text-center">
+		<h1> Seção 1 do <%= userName %></h1> 
+		<% for (var i=0; i<linesSec1.length; i++) {%>
+		<p> <%= linesSec1[i] %> </p>
+		<% } %>
+</div>
+
+<%- contentFor('secao2') %>
+<div class="jumbotron text-center">
+		<h1> Seção 2 </h1> 
+		<ul>
+		<% for (var i=0; i<linesSec2.length; i++) {%>
+		<li> <%= linesSec2[i] %> </li>
+		<% } %>
+		</ul>
+</div>

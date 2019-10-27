@@ -1,0 +1,51 @@
+
+{
+	"nome_receita" : "Churrasco do Desejo Canino",
+	"descricao" : "Gosta de carne? Ótimo! Não gosta? Você está errado!!!",
+	"imagem_receita" : "6.jpg",
+	"op" : "Físico Turista",
+	"link_op" : "#",
+	"avatar_op" : "1.jpeg",
+	"avaliacoes" : 
+	[
+		[
+			"Uma delícia! E o cozinheiro é excelente!", "5", "Mãe do Físico Turista", "#"
+		]
+	],
+	"receita" :
+	[
+		"Carnes", "30", "2"
+	],
+	"ingredientes" : 
+	[
+		"Carne. Até dar uma dor",
+		"Sal à gosto",
+		"Bacon até entupir as veias"
+	],
+	"preparo" :
+	[
+
+    "Taca sal nas carnes",
+    "Joga no fogo",
+    "Colocar um cachorro pra observar o processo todo",
+    "Come tudo quente quando estiver no ponto"
+	],
+
+	"restaurantes" : 
+	[
+		[
+			"Toca da Catita", "#", "#", "4"
+		],
+		[
+			"Barbecue King", "#", "#", "3"
+		]
+	],
+	
+	"receitas_semelhantes" :
+	[
+		[	"5", "Nuggets de Carne de Porco", "5.jpg"],
+		[	"2", "Macarronada de Macarrão", "2.jpg"],
+		[	"1", "Miojo Supremo de Asgard", "1.jpg"]
+	]
+
+}

@@ -1,0 +1,33 @@
+
+<%- contentFor('secao') %>
+<div class="configS1">
+		<h1> Configurações de Visualização</h1> 
+</div>
+
+
+<div id="estilo_atual">
+<% if(style == "style_1"){ %>
+	<%- "Estilo: Estilo 1" %>
+<% } else{ %>
+	<%- "Estilo: Estilo 2" %>
+<% } %>
+</div>
+<br>
+<% var oldStyle = style; %>
+<% if(oldStyle[oldStyle.length - 1] == "1"){
+	newStyle = "style_2";
+} else {
+	newStyle = "style_1";
+} %>
+<button id="estilo" onclick="changeCSS('<%- newStyle %>','<%- oldStyle %>')">
+	Mudar Estilo
+</button>
+
+<br>
+<br>
+Fonte:
+<button onclick="font_down()">A-</button>
+<button onclick="font_up()">A+</button>
+
+ <button onclick="reset()">Configuração Padrão</button>
+
