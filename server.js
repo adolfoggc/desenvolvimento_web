@@ -44,24 +44,35 @@ function criar_arquivo(nome, conteudo){
 	});  
 }
 
-function pegue_dados_receita(numero){
-	arquivo = 'public/data/'+numero+'.json';
+function inserir_no_arquivo(nome, conteudo){
+	fs.appendFile(nome, conteudo, function (err) {
+	  if (err) throw err;
+	  console.log('Çoca, çoca, çoca! Eu gosto de paçoca!');
+	});  
+}
+
+function acrescentar_nova_receita(numero, novos_dados){
+	arquivo = 'public/data/recipes.json';
 	fs.readFile(arquivo, (err, dados) => {
 	  if (err) {
 	    console.error(err)
 	    return
 	  }
-	  dados = JSON.parse(dados);
-	  nota = 0;
-	  for(let count = 0; count<dados["avaliacoes"].length; count++){
-	  	nota = nota + parseInt(dados["avaliacoes"][count][1]);
+	  dados = dados.toString();
+	  if(dados.length == 0){
+	  	//inserir vírgula para novo elemento
+	  	dados = "{\n";
+	  } 
+	  else if(dados.length > 0){
+	  	dados = dados.substring(0,dados.length -1);
+	  	dados = dados+",\n";
+	  	//inserir vírgula para novo elemento
 	  }
-	  nota = nota/dados["avaliacoes"].length;
-	  informacao = [numero, dados["nome_receita"], nota];
-	  
-	}).on('end', function() {
-  // use the devices array in here
-  	return informacao;
+
+	  //formatar dados
+	  novos_dados = dados+'"'+numero+'":["'+novos_dados+'"]\n}';
+	  criar_arquivo(arquivo, novos_dados);
+
 	});
 }
 
@@ -113,12 +124,16 @@ app.get('/', (req, res) => {
 			console.log('Sem Tamanho\n');
 			size = 2;
 		}
-
-		//criar arquivo, se não existir
-		criar_arquivo("public/data/recipes.json", "hohohohoho");
-		console.log(pegue_dados_receita("1"));
-		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas});
-
+		alvo = "public/data/recipes.json";
+		dadosReceitas = new Array();
+		fs.readFile(alvo, function(err, info) {
+			if (err) throw err;
+  		for(var rec_count = 0; rec_count < dadosReceitas; rec_count){
+  			dadosReceitas.push(info[rec_count][0],info[rec_count][1]);	
+  		}
+  		console.log(dadosReceitas);
+			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas});
+		});
 	}); //fim readdir
 });	
 
