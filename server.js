@@ -123,7 +123,7 @@ app.get('/', (req, res) => {
   		}
   		console.log(dadosReceitas);
   		step = undefined;
-			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas});
+			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas, step});
 		});
 	}); //fim readdir
 });	
@@ -198,7 +198,10 @@ app.get('/receita/:rec', function(req,res) {
 });
 
 app.get('/contato', (req, res) => {
-    res.render('contato', {style, size})
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+		step = undefined;
+    res.render('contato', {style, size, style, size, step})
 })
 
 app.get('/config', (req, res) => {
