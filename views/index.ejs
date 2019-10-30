@@ -3,23 +3,59 @@
 <%- nomesReceitas %>
 <%- contentFor('secao') %>
 <% if(ultimaReceita != 0) {%>
-
+<a href=<%= "receita/"+ ultimaReceita %> > 
+	<div class="recipe_display">
+	    <h2 id="nome_receita">
+	      <%= 'Última: '+ dadosReceitas[ultimaReceita][0] %>
+	    </h2>
+    	<% path_da_imagem = "/imagens/receitas/"+ultimaReceita+".jpg" %>
+    	<img src="<%-path_da_imagem%>">
+	    <div>
+	    	<div class="nota">Nota:
+	 				<% nota = parseInt(dadosReceitas[ultimaReceita][1]); %>
+ 				 	<% var contagem = 0; %>
+				  <% for( ; contagem < nota ; contagem++) { %>
+				  	<i class="fas fa-star"></i>
+				 	<% } %>
+				 	<% for ( ; contagem < 5 ; contagem = contagem + 1) { %>
+				 		<i class="far fa-star"></i>
+				 	<% } %> 
+				</div><!-- NOTA -->
+	    </div>	
+	  </div>
+	</a>
 <% } %>
 
 <% for( var count = 0;count< receitas.length -1 ; count++) { %>
   <% if(receitas[count] != ultimaReceita) { %>
-		
+		<a href=<%= "receita/"+ receitas[count] %> >
 	  <div class="recipe_display">
 	    <h2 id="nome_receita">
-	      <%= dadosReceitas[count] %>
+	      <%= dadosReceitas[receitas[count]][0] %>
 	    </h2>
     	<% path_da_imagem = "/imagens/receitas/"+receitas[count]+".jpg" %>
     	<img src="<%-path_da_imagem%>">
 	    <div>
-
+	    	<div class="nota">Nota:
+	 				<% nota = parseInt(dadosReceitas[receitas[count]][1]); %>
+ 				 	<% var contagem = 0; %>
+				  <% for( ; contagem < nota ; contagem++) { %>
+				  	<i class="fas fa-star"></i>
+				 	<% } %>
+				 	<% for ( ; contagem < 5 ; contagem = contagem + 1) { %>
+				 		<i class="far fa-star"></i>
+				 	<% } %> 
+				</div><!-- NOTA -->
 	    </div>	
 	  </div>
+	  </a>
   <% } %>
 <% } %>
 
 </div>
+
+<style>
+	a {
+		text-decoration: none;
+	}
+</style>

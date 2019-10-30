@@ -117,17 +117,7 @@ app.get('/', (req, res) => {
 
 		diret = path.join(__dirname+'/public/data/recipe_names.json');
 		nomesReceitas = new Array();
-		// fs.readFile(alvo, function(err, info) {
-		// 	console.log(toString(info));
-		// 	if (err) throw err;
-  // 		for(var rec_count = 0; rec_count < nomesReceitas; rec_count){
-  // 			//nomesReceitas.push(info[rec_count][0],info[rec_count][1]);
-  // 			console.log(info);	
-  // 		}
-  // 		console.log("nomesReceitas");
-  // 		step = undefined;
-		// 	res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, nomesReceitas});
-		// });
+		
 
 		//modelo anterior
 		fs.readFile(diret, function (err, inside_data) {
@@ -136,10 +126,6 @@ app.get('/', (req, res) => {
 			return console.error(err);
 		}  
 		dadosReceitas = require(diret);
-		//dadosReceitas = JSON.parse(inside_data); 
-		//console.log(dadosReceitas);
-		//step = 2;
-		//res.render('recipes', {style, size, dadosReceita, step});
 		
 		step = undefined;
 		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});
@@ -216,6 +202,10 @@ app.get('/receita/:rec', function(req,res) {
 		}  
 		dadosReceita = require(diret+'.json');
 		step = 2;
+		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
+		//res.cookie('lastCv', :rec);
+
+		res.cookie('ultimaReceita', req.params.rec);
 		res.render('recipes', {style, size, dadosReceita, step});
 	});
 });
