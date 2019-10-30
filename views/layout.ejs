@@ -3,6 +3,9 @@
   <head>
     <title id="titulo">Tudo Gorduroso - Comeu, morreu!</title>
     <% var estilo = "css/"+ style + ".css"%>
+    <%  if(step != undefined){
+          estilo = '../../'+estilo;
+        } %>
     <link rel="stylesheet" type="text/css" href="<%- estilo %>">
     <link rel="shortcut icon" href="/imagens/logo/logo_16.ico" />
     <link href="https://fonts.googleapis.com/css?family=Gabriela|Kotta+One&display=swap" rel="stylesheet">

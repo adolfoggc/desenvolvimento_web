@@ -76,6 +76,17 @@ function acrescentar_nova_receita(numero, novos_dados){
 	});
 }
 
+function checagem_cookie(cookie, nome_cookie, valor_padrao){
+	valor = cookie;
+	if (valor != undefined) {
+		console.log('Valor em '+nome_cookie+': '+ valor +'\n');
+	} else {
+		console.log('Cookie Vazio: '+valor_padrao+'\n');
+		valor = valor_padrao;
+	}
+	return valor;
+}
+
 //coisas sérias
 
 app.get('/', (req, res) => {
@@ -93,37 +104,16 @@ app.get('/', (req, res) => {
   	});
   	var dadosReceitas = new Array; 
 		var count_receita = 0;
-
 		
 			
-		// Carrega cookie
-		var ultimaReceita = req.cookies.ultimaReceita;
+		// Carrega receita
+		var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
 
-		// Visualizacao de conteudo do cookie
-		if (ultimaReceita != undefined) {
-			console.log('Receita nº: ' + ultimaReceita +'\n');
-		} else {
-			console.log('Receita: vazia!!!\n');
-			ultimaReceita = 0;
-		}
+		// Carrega cookies de preferências (cookie, nome, valor padrão)
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 
-
-		// Carrega cookies de preferências
-		var style = req.cookies.style;
-		var size = req.cookies.size;
-		// Visualizacao de conteudo do cookie
-		if (style != undefined) {
-			console.log('Estilo: '+ style +'\n');
-		} else {
-			console.log('Sem Estilo\n');
-			style = "style_1";
-		}
-		if (size != undefined) {
-			console.log('Tamanho: '+ size+'\n');
-		} else {
-			console.log('Sem Tamanho\n');
-			size = 2;
-		}
+		
 		alvo = "public/data/recipes.json";
 		dadosReceitas = new Array();
 		fs.readFile(alvo, function(err, info) {
@@ -132,6 +122,7 @@ app.get('/', (req, res) => {
   			dadosReceitas.push(info[rec_count][0],info[rec_count][1]);	
   		}
   		console.log(dadosReceitas);
+  		step = undefined;
 			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas});
 		});
 	}); //fim readdir
@@ -189,6 +180,10 @@ app.get('/cv', function(req,res) {
 })
 
 app.get('/receita/:rec', function(req,res) {
+
+	// Carrega cookies de preferências (cookie, nome, valor padrão)
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 	var diret; 
 	diret = path.join(__dirname+'/public/data/'+req.params.rec);	
 	fs.readFile(diret+'.json', function (err, data) {
@@ -197,8 +192,8 @@ app.get('/receita/:rec', function(req,res) {
 			return console.error(err);
 		}  
 		dadosReceita = require(diret+'.json');
-
-		res.render('recipes', {style, size, dadosReceita});
+		step = 2;
+		res.render('recipes', {style, size, dadosReceita, step});
 	});
 });
 
