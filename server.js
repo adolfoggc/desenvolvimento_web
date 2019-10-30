@@ -114,17 +114,40 @@ app.get('/', (req, res) => {
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 
 		
-		alvo = "public/data/recipes.json";
-		dadosReceitas = new Array();
-		fs.readFile(alvo, function(err, info) {
-			if (err) throw err;
-  		for(var rec_count = 0; rec_count < dadosReceitas; rec_count){
-  			dadosReceitas.push(info[rec_count][0],info[rec_count][1]);	
-  		}
-  		console.log(dadosReceitas);
-  		step = undefined;
-			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, dadosReceitas, step});
-		});
+
+		diret = path.join(__dirname+'/public/data/recipe_names.json');
+		nomesReceitas = new Array();
+		// fs.readFile(alvo, function(err, info) {
+		// 	console.log(toString(info));
+		// 	if (err) throw err;
+  // 		for(var rec_count = 0; rec_count < nomesReceitas; rec_count){
+  // 			//nomesReceitas.push(info[rec_count][0],info[rec_count][1]);
+  // 			console.log(info);	
+  // 		}
+  // 		console.log("nomesReceitas");
+  // 		step = undefined;
+		// 	res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, nomesReceitas});
+		// });
+
+		//modelo anterior
+		fs.readFile(diret, function (err, inside_data) {
+		if (err) {
+			//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+			return console.error(err);
+		}  
+		dadosReceitas = require(diret);
+		//dadosReceitas = JSON.parse(inside_data); 
+		//console.log(dadosReceitas);
+		//step = 2;
+		//res.render('recipes', {style, size, dadosReceita, step});
+		
+		step = undefined;
+		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});
+		
+	});
+
+
+
 	}); //fim readdir
 });	
 

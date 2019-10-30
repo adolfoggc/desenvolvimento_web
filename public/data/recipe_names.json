@@ -1,5 +1,5 @@
 {
-"1": "Miojo Supremo de Asgard",
-"2": "Macarronada de Macarrão",
-"6": "Churrasco do Desejo Canino"
+	"1" : ["Miojo Supremo de Asgard", "2"],
+	"2" : ["Macarronada de Macarrão", "2"],
+	"6" : ["Churrasco do Desejo Canino", "5"]
 }

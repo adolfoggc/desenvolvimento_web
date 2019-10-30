@@ -1,19 +1,17 @@
 
 
-
+<%- nomesReceitas %>
 <%- contentFor('secao') %>
 <% if(ultimaReceita != 0) {%>
 
 <% } %>
 
-<% var count = 0; %>
-<%= dadosReceitas %> 
-<% for( ;count< receitas.length ; count++) { %>
+<% for( var count = 0;count< receitas.length -1 ; count++) { %>
   <% if(receitas[count] != ultimaReceita) { %>
 		
 	  <div class="recipe_display">
 	    <h2 id="nome_receita">
-	      receita <%- count+1 %>
+	      <%= dadosReceitas[count] %>
 	    </h2>
     	<% path_da_imagem = "/imagens/receitas/"+receitas[count]+".jpg" %>
     	<img src="<%-path_da_imagem%>">
