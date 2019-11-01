@@ -1,4 +1,5 @@
 <%- contentFor('secao') %>
+
 <div class="container_cabecalho">
 	<h1 id="nome_receita">
 		<%= dadosReceita["nome_receita"] %>
@@ -175,3 +176,7 @@
 		</a>
 	<% } %>
 </div>
+
+<%- contentFor('script') %>
+	setCookie("ultimaReceita", <%= recipe_id %>, 10);
+	console.log("opa");

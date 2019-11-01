@@ -81,12 +81,16 @@
         deleteCookie("style");
         deleteCookie("size");
         deleteCookie("ultimaReceita");
+         
         console.log("Resetado!");
         changeCSS("style_1", "style_2");
         set_size(2);
       }
 
       set_size(<%- size %>);
+
+      <%- script %>
+
     </script>
   </body>
 </html>  

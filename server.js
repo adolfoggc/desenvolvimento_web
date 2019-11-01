@@ -14,7 +14,7 @@ const path = require('path');
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
 
 /*
  * Configuracap do uso do express-ejs-layouts na nossa aplicação
@@ -107,7 +107,7 @@ app.get('/', (req, res) => {
 		
 			
 		// Carrega receita
-		var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
+		var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
 
 		// Carrega cookies de preferências (cookie, nome, valor padrão)
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
@@ -204,9 +204,9 @@ app.get('/receita/:rec', function(req,res) {
 		step = 2;
 		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
 		//res.cookie('lastCv', :rec);
-
-		res.cookie('ultimaReceita', req.params.rec);
-		res.render('recipes', {style, size, dadosReceita, step});
+		var recipe_id = req.params.rec;
+		//res.cookie('ultimaReceita', req.params.rec, { maxAge: 9000, httpOnly: true });
+		res.render('recipes', {style, size, dadosReceita, step, recipe_id});
 	});
 });
 
