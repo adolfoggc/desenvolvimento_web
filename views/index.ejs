@@ -1,11 +1,12 @@
 
 <%- contentFor('secao') %>
 <% if(ultimaReceita != 0) {%>
-<a href=<%= "receita/"+ ultimaReceita %> > 
 	<div class="recipe_display">
-	    <h2 id="nome_receita">
-	      <%= 'Última: '+ dadosReceitas[ultimaReceita][0] %>
-	    </h2>
+		  <a href=<%= "receita/"+ ultimaReceita %> > 
+		    <h2 id="nome_receita">
+		      <%= 'Última: '+ dadosReceitas[ultimaReceita][0] %>
+		    </h2>
+    	</a>
     	<% path_da_imagem = "/imagens/receitas/"+ultimaReceita+".jpg" %>
     	<img src="<%-path_da_imagem%>">
 	    <div>
@@ -19,18 +20,19 @@
 				 		<i class="far fa-star"></i>
 				 	<% } %> 
 				</div><!-- NOTA -->
+				Edit Delete
 	    </div>	
 	  </div>
-	</a>
 <% } %>
 
 <% for( var count = 0;count< receitas.length -1 ; count++) { %>
   <% if(receitas[count] != ultimaReceita) { %>
-		<a href=<%= "receita/"+ receitas[count] %> >
 	  <div class="recipe_display">
-	    <h2 id="nome_receita">
-	      <%= dadosReceitas[receitas[count]][0] %>
-	    </h2>
+	  	<a href=<%= "receita/"+ receitas[count] %> >
+		    <h2 id="nome_receita">
+		      <%= dadosReceitas[receitas[count]][0] %>
+		    </h2>
+	    </a>
     	<% path_da_imagem = "/imagens/receitas/"+receitas[count]+".jpg" %>
     	<img src="<%-path_da_imagem%>">
 	    <div>
@@ -44,9 +46,9 @@
 				 		<i class="far fa-star"></i>
 				 	<% } %> 
 				</div><!-- NOTA -->
+	    	Edit Delete
 	    </div>	
 	  </div>
-	  </a>
   <% } %>
 <% } %>
 
