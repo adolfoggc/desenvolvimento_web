@@ -1,182 +1,192 @@
 <%- contentFor('secao') %>
-
-<div class="container_cabecalho">
-	<h1 id="nome_receita">
-		<%= dadosReceita["nome_receita"] %>
-	</h1>
-</div>
-<div id="frame_imagem">
-	<img id="imagem_receita" class="imagem" src="/imagens/receitas/<%= dadosReceita["imagem_receita"] %>" alt="Imagem da receita">
-</div>
-<div id="informacoes" class="expandida_grid_4">	
-	<div class="card">
-		<p class="texto_j" id="descricao">
-			<%= dadosReceita["descricao"] %>
-		</p>
-		<div id="dados_info">
-			<p>Cadastrado por:</p>
-			<div class="flex_r">
-				<p class="flex_1">
-					<a href="#coo">
-						<%= dadosReceita["op"] %>
-					</a><br>
-					Fonte: 
-					<% if (dadosReceita["receita_original"] > '' ){ %>
-						<a href="<%= dadosReceita["receita_original"] %>">Receita Original</a>
- 			 		<% } else { %>
- 			 			Nova Receita
- 			 		<% } %>
-				</p>
-				<img class="flex_1 avatar" id="imagem_user" src="/imagens/avatar/<%= dadosReceita["avatar_op"] %>">
-			</div>
-		</div>
+<form action='update/<%= recipe_id %>' method='post' encType="multipart/form-data">
+	<div class="container_cabecalho">
+		<h1 id="nome_receita">
+			<%= dadosReceita["nome_receita"] %>
+		</h1>
 	</div>
-</div>
-<div class="container_cabecalho">
-	<h2>Avaliações</h2>
-</div>
-<div id="avaliacoes">
-	<div class="expandida" id="avaliacao_geral">
-		<div class="card grid_2">
-			<div class="nota" id="nota_geral">
-				Nota Geral:
-				<%
-					var count = 0;
-					  var nota = 0;
-					  for(count = 0; count < dadosReceita["avaliacoes"].length; count = count + 1){
-					  	nota = nota + parseInt(dadosReceita["avaliacoes"][count][1]);
-	 					}
-	 					nota = nota/dadosReceita["avaliacoes"].length;
-					  for ( count= 0; count < nota ; count = count + 1) { %>
-					  	<i class="fas fa-star"></i>
-					 	<% } %>
-					 	<% for ( ; count < 5 ; count = count + 1) { %>
-					 		<i class="far fa-star"></i>
-					<% } %>
-			</div>
-			<div class="votos" id="quantidade_votos">
-				Votos: <%= dadosReceita["avaliacoes"].length %>
-			</div>
-		</div>
+	<div id="frame_imagem">
+		<img id="imagem_receita" class="imagem" src="/imagens/receitas/<%= dadosReceita["imagem_receita"] %>" alt="Imagem da receita">
 	</div>
-	<%
-	let avail = 0; 
-	for(avail = 0; avail<dadosReceita["avaliacoes"].length; avail = avail + 1){ %>
-	 		<div class="expandida">
-	 			<div class="card">
-	 				<div class="texto_avaliacao">
-	 					<q><%= dadosReceita["avaliacoes"][avail][0] %></q>
-	 				</div>
-	 				<div class="grid_2">
-	 					<div class="nota">Nota:
-	 					  <% 
-	 					  nota = parseInt(dadosReceita["avaliacoes"][avail][1]);
-	 					  for ( count= 0; count < nota ; count = count + 1) { %>
-	 					  	<i class="fas fa-star"></i>
-	 					 	<% } %>
-	 					 	<% for ( ; count < 5 ; count = count + 1) { %>
-	 					 		<i class="far fa-star"></i>
-	 					 	<% } %>
-					</div>
-					<div class="avaliador">
-						Avaliado por: <a href="<%= dadosReceita["avaliacoes"][avail][3] %>"><%= dadosReceita["avaliacoes"][avail][2] %></a>
-					</div>
+	<div id="informacoes" class="expandida_grid_4">	
+		<div class="card">
+			<p class="texto_j" id="descricao">
+				<%= dadosReceita["descricao"] %>
+			</p>
+			<textarea cols="100" rows="5" class="text_area" name="descricao">
+				<%= dadosReceita["descricao"] %>
+			</textarea>
+			<div id="dados_info">
+				<p>Cadastrado por:</p>
+				<div class="flex_r">
+					<p class="flex_1">
+						<a href="#coo">
+							<%= dadosReceita["op"] %>
+						</a><br>
+						Fonte: 
+						<% if (dadosReceita["receita_original"] > '' ){ %>
+							<a href="<%= dadosReceita["receita_original"] %>">Receita Original</a>
+	 			 		<% } else { %>
+	 			 			Nova Receita
+	 			 		<% } %>
+					</p>
+					<img class="flex_1 avatar" id="imagem_user" src="/imagens/avatar/<%= dadosReceita["avatar_op"] %>">
 				</div>
 			</div>
 		</div>
-	 	<% } %>
-</div><!-- fim avaliações -->
-<div class="container_cabecalho">
-	<h2>Receita</h2>
-</div>
-<div class="expandir_container flex_r">
-	<div class="flex_1 flex_c texto_c card" id="categoria">
-		<i class="fas fa-pizza-slice fa-3x"></i>
-		<p>Categoria:</p>
-		<p id="categoria_receita"><%= dadosReceita["receita"][0] %></p>
 	</div>
-	<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
-		<i class="far fa-clock fa-3x"></i>
-		<p>Tempo de Preparo:</p>
-		<p id="tempo_receita">
-			<%= dadosReceita["receita"][1] %>
-			<% if( parseInt( dadosReceita["receita"][1] ) == 1){ %>
-				<%= " minuto" %>
-			<% } else { %>
-				<%= " minutos" %>
-			<% } %>	
-		</p>
+	<div class="container_cabecalho">
+		<h2>Avaliações</h2>
 	</div>
-	<div class="flex_1 flex_c texto_c card" id="porcoes">
-		<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
-		<p>Rendimento:</p>
-		<p id="quantidade_receita">
-			<%= dadosReceita["receita"][2] %>
-			<% if( parseInt( dadosReceita["receita"][2] ) == 1){ %>
-				<%= " pessoa" %>
-			<% } else { %>
-				<%= " pessoas" %>
-			<% } %>		
-		</p>
-	</div>
-</div>
-<div>
-	<h3>Ingredientes</h3>
-	<div class="card">
-		<ul id="ingredientes">
-			<% for(count = 0; count< dadosReceita["ingredientes"].length; count = count + 1) { %>
-				<li><%= dadosReceita["ingredientes"][count] %></li>
-			<% } %>
-		</ul>
-	</div>
-	<h3>Preparo</h3>
-	<div class="card">
-		<ol id="preparo">
-			<% for(count = 0; count< dadosReceita["preparo"].length; count = count + 1) { %>
-				<li><%= dadosReceita["preparo"][count] %></li>
-			<% } %>
-		</ol>
-	</div>
-</div>
-<h2>Onde encontar</h2>
-<div id="restaurantes">
-	<% 
-	var rest = 0;
-	for(rest = 0 ; rest < dadosReceita["restaurantes"].length ; rest = rest + 1){ %>
-		<div class="card">
-			<div>
-				<p><%= dadosReceita["restaurantes"][rest][0] %> - 
-					<a href="<%= dadosReceita["restaurantes"][rest][1] %>"  target="_blank">Link do pedido</a> -
-					<a href="<%= dadosReceita["restaurantes"][rest][2] %>" target="_blank">Endereço</a>
-				</p>
-				<p>Avaliação média: 
+	<div id="avaliacoes">
+		<div class="expandida" id="avaliacao_geral">
+			<div class="card grid_2">
+				<div class="nota" id="nota_geral">
+					Nota Geral:
 					<%
-						let count = 0; 
-	 					  nota = parseInt(dadosReceita["restaurantes"][rest][3]);
-	 					  for ( count= 0; count < nota ; count = count + 1) { %>
-	 					  	<i class="fas fa-star"></i>
-	 					 	<% } %>
-	 					 	<% for ( ; count < 5 ; count = count + 1) { %>
-	 					 		<i class="far fa-star"></i>
-	 					 	<% } %>
-				</p>
+						var count = 0;
+						  var nota = 0;
+						  for(count = 0; count < dadosReceita["avaliacoes"].length; count = count + 1){
+						  	nota = nota + parseInt(dadosReceita["avaliacoes"][count][1]);
+		 					}
+		 					nota = nota/dadosReceita["avaliacoes"].length;
+						  for ( count= 0; count < nota ; count = count + 1) { %>
+						  	<i class="fas fa-star"></i>
+						 	<% } %>
+						 	<% for ( ; count < 5 ; count = count + 1) { %>
+						 		<i class="far fa-star"></i>
+						<% } %>
+				</div>
+				<div class="votos" id="quantidade_votos">
+					Votos: <%= dadosReceita["avaliacoes"].length %>
+				</div>
 			</div>
 		</div>
-	<% } %>
-</div>
-<h2>Receitas Semelhantes</h2>
-<div class="flex_r" id="receitas_semelhantes">
-	<% for(count = 0; count < dadosReceita["receitas_semelhantes"].length; count = count + 1) { %>
-		<a href="<%= dadosReceita["receitas_semelhantes"][count][0]%>" class="flex_1 alinhar_centro">
-			<img src="/imagens/receitas/
-			<%= dadosReceita["receitas_semelhantes"][count][2] %>" class="flex_1">
-			<p class="flex_1 texto_c">
-				<%= dadosReceita["receitas_semelhantes"][count][1] %>
+		<%
+		let avail = 0; 
+		for(avail = 0; avail<dadosReceita["avaliacoes"].length; avail = avail + 1){ %>
+		 		<div class="expandida">
+		 			<div class="card">
+		 				<div class="texto_avaliacao">
+		 					<q><%= dadosReceita["avaliacoes"][avail][0] %></q>
+		 				</div>
+		 				<div class="grid_2">
+		 					<div class="nota">Nota:
+		 					  <% 
+		 					  nota = parseInt(dadosReceita["avaliacoes"][avail][1]);
+		 					  for ( count= 0; count < nota ; count = count + 1) { %>
+		 					  	<i class="fas fa-star"></i>
+		 					 	<% } %>
+		 					 	<% for ( ; count < 5 ; count = count + 1) { %>
+		 					 		<i class="far fa-star"></i>
+		 					 	<% } %>
+						</div>
+						<div class="avaliador">
+							Avaliado por: <a href="<%= dadosReceita["avaliacoes"][avail][3] %>"><%= dadosReceita["avaliacoes"][avail][2] %></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		 	<% } %>
+	</div><!-- fim avaliações -->
+	<div class="container_cabecalho">
+		<h2>Receita</h2>
+	</div>
+	<div class="expandir_container flex_r">
+		<div class="flex_1 flex_c texto_c card" id="categoria">
+			<i class="fas fa-pizza-slice fa-3x"></i>
+			<p>Categoria:</p>
+			<p id="categoria_receita"><%= dadosReceita["receita"][0] %></p>
+		</div>
+		<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
+			<i class="far fa-clock fa-3x"></i>
+			<p>Tempo de Preparo:</p>
+			<p id="tempo_receita">
+				<%= dadosReceita["receita"][1] %>
+				<% if( parseInt( dadosReceita["receita"][1] ) == 1){ %>
+					<%= " minuto" %>
+				<% } else { %>
+					<%= " minutos" %>
+				<% } %>	
 			</p>
-		</a>
-	<% } %>
-</div>
+		</div>
+		<div class="flex_1 flex_c texto_c card" id="porcoes">
+			<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
+			<p>Rendimento:</p>
+			<p id="quantidade_receita">
+				<%= dadosReceita["receita"][2] %>
+				<% if( parseInt( dadosReceita["receita"][2] ) == 1){ %>
+					<%= " pessoa" %>
+				<% } else { %>
+					<%= " pessoas" %>
+				<% } %>		
+			</p>
+		</div>
+	</div>
+	<div>
+		<h3>Ingredientes</h3>
+		<div class="card">
+			<ul id="ingredientes">
+				<% for(count = 0; count< dadosReceita["ingredientes"].length; count = count + 1) { %>
+					<li><%= dadosReceita["ingredientes"][count] %></li>
+				<% } %>
+			</ul>
+		</div>
+		<h3>Preparo</h3>
+		<div class="card">
+			<ol id="preparo">
+				<% for(count = 0; count< dadosReceita["preparo"].length; count = count + 1) { %>
+					<li><%= dadosReceita["preparo"][count] %></li>
+				<% } %>
+			</ol>
+		</div>
+	</div>
+	<h2>Onde encontar</h2>
+	<div id="restaurantes">
+		<% 
+		var rest = 0;
+		for(rest = 0 ; rest < dadosReceita["restaurantes"].length ; rest = rest + 1){ %>
+			<div class="card">
+				<div>
+					<p><%= dadosReceita["restaurantes"][rest][0] %> - 
+						<a href="<%= dadosReceita["restaurantes"][rest][1] %>"  target="_blank">Link do pedido</a> -
+						<a href="<%= dadosReceita["restaurantes"][rest][2] %>" target="_blank">Endereço</a>
+					</p>
+					<p>Avaliação média: 
+						<%
+							let count = 0; 
+		 					  nota = parseInt(dadosReceita["restaurantes"][rest][3]);
+		 					  for ( count= 0; count < nota ; count = count + 1) { %>
+		 					  	<i class="fas fa-star"></i>
+		 					 	<% } %>
+		 					 	<% for ( ; count < 5 ; count = count + 1) { %>
+		 					 		<i class="far fa-star"></i>
+		 					 	<% } %>
+					</p>
+				</div>
+			</div>
+		<% } %>
+	</div>
+	<h2>Receitas Semelhantes</h2>
+	<div class="flex_r" id="receitas_semelhantes">
+		<% for(count = 0; count < dadosReceita["receitas_semelhantes"].length; count = count + 1) { %>
+			<a href="<%= dadosReceita["receitas_semelhantes"][count][0]%>" class="flex_1 alinhar_centro">
+				<img src="/imagens/receitas/
+				<%= dadosReceita["receitas_semelhantes"][count][2] %>" class="flex_1">
+				<p class="flex_1 texto_c">
+					<%= dadosReceita["receitas_semelhantes"][count][1] %>
+				</p>
+			</a>
+		<% } %>
+	</div>
+	<input type='submit' value='Upload!'>
+</form>
 
+<style>
+	.text_area {
+		resize: none;
+	}
+</style>
 <%- contentFor('script') %>
 	setCookie("ultimaReceita", <%= recipe_id %>, 10);
 	console.log("opa");
