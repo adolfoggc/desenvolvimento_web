@@ -105,6 +105,15 @@ function checagem_cookie(cookie, nome_cookie, valor_padrao){
 	return valor;
 }
 
+function backup_arquivo( arquivo, endereco, fs ){
+	fs.copyFile(endereco+"/"+arquivo+'.json', endereco+"/backup_"+arquivo+'.json', (err) => {
+	  if (err){ 
+	  	throw err;
+	  	console.log(err);
+	  }
+	});	
+}
+
 //coisas sérias
 
 app.get('/', (req, res) => {
@@ -282,7 +291,7 @@ app.get('/config', (req, res) => {
 app.post('/receita/edit/update/:rec', function(req, res) {
     upload(req, res, function (err) {
         if (err) {
-            res.send(' <h2>O seu upload NÃO foi realizado! <h2>');
+            res.send('<h1>Tururu...</h1>');
             return console.log(err);
         }
        
@@ -293,13 +302,19 @@ app.post('/receita/edit/update/:rec', function(req, res) {
         // +req.body.campo3 + '! </p>');
        
         // var direct = path.join(__dirname + '/public/data/');
-       	var direct = path.join(__dirname + '/public/data/');
+       	var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
+        backup_arquivo("receita",direct,fs);
+        
         var new_data = JSON.stringify({
             nome_receita : req.body.nome_receita,
-            descricao : req.body.descricao
+            descricao : req.body.descricao,
+            preparo : req.body.preparo,
+            ingredientes : req.body.ingredientes,
+            receita : [req.body.categoria_receita, req.body.tempo_receita, req.body.quantidade_receita ],
+            receita_original : req.body.receita_original
         });
        
-        fs.writeFile(direct + '/test.json', new_data, function (err, data){
+        fs.writeFile(direct + '/dados.json', new_data, function (err, data){
             if (err) {
                 console.log('Erro gravando o arquivo test.json');
                 return console.error(err);

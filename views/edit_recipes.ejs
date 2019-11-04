@@ -7,7 +7,6 @@
 
 		<input name="nome_receita" id="form_nome_receita" onfocusout="abrir_campo('nome_receita')" value="<%= dadosReceita["nome_receita"] %>" style="margin: auto">
 		</input>
-
 	</div>
 	<div id="frame_imagem">
 		<img id="imagem_receita" class="imagem" src="/receitas/<%= recipe_id %>/receita.jpg" alt="Imagem da receita">
@@ -27,15 +26,19 @@
 						<a onclick="abrir_input('form_op')" id="op">
 							<%= dadosReceita["op"] %>
 						</a>
-						<input name="form_op" id="form_op" onfocusout="abrir_campo('op')" value="<%= dadosReceita["op"] %>" style="display: none">
+						<input name="op" id="form_op" onfocusout="abrir_campo('op')" value="<%= dadosReceita["op"] %>" style="display: none">
 						</input>
 						<br>
 						Fonte: 
+						<a id="receita_original" onclick="abrir_input('form_receita_original')">
 						<% if (dadosReceita["receita_original"] > '' ){ %>
-							<a href="<%= dadosReceita["receita_original"] %>">Receita Original</a>
+							Receita Original
 	 			 		<% } else { %>
 	 			 			Nova Receita
 	 			 		<% } %>
+	 			 		</a>
+	 			 		<input name="receita_original" id="form_receita_original" onfocusout="abrir_campo('receita_original')" value="<%= dadosReceita["receita_original"] %>" style="display: none">
+						</input>
 					</p>
 					<img class="flex_1 avatar" id="imagem_user" src="/receitas/<%= recipe_id %>/avatar.jpeg">
 				</div>
@@ -74,23 +77,28 @@
 		for(avail = 0; avail<dadosReceita["avaliacoes"].length; avail = avail + 1){ %>
 		 		<div class="expandida">
 		 			<div class="card">
-		 				<div class="texto_avaliacao">
+		 				<div class="texto_avaliacao" id="avaliacoes_<% avail %>_0" onclick="abrir_form('form_avaliacoes_<%= avail %>_0')">
 		 					<q><%= dadosReceita["avaliacoes"][avail][0] %></q>
 		 				</div>
+
+		 				
 		 				<div class="grid_2">
 		 					<div class="nota">Nota:
-		 					  <% 
-		 					  nota = parseInt(dadosReceita["avaliacoes"][avail][1]);
-		 					  for ( count= 0; count < nota ; count = count + 1) { %>
-		 					  	<i class="fas fa-star"></i>
-		 					 	<% } %>
-		 					 	<% for ( ; count < 5 ; count = count + 1) { %>
-		 					 		<i class="far fa-star"></i>
-		 					 	<% } %>
-						</div>
-						<div class="avaliador">
-							Avaliado por: <a href="<%= dadosReceita["avaliacoes"][avail][3] %>"><%= dadosReceita["avaliacoes"][avail][2] %></a>
-						</div>
+		 					  <div  id="avaliacoes_<%= avail %>_1" onclick="abrir_input('form_avaliacoes_<%= avail %>_1')">
+			 					  <% 
+			 					  nota = parseInt(dadosReceita["avaliacoes"][avail][1]);
+			 					  for ( count= 0; count < nota ; count = count + 1) { %>
+			 					  	<i class="fas fa-star"></i>
+			 					 	<% } %>
+			 					 	<% for ( ; count < 5 ; count = count + 1) { %>
+			 					 		<i class="far fa-star"></i>
+			 					 	<% } %>
+		 					 	</div>
+							</div>
+							<input type="number" name="avaliacoes_<%= avail %>_1" id="form_avaliacoes_<%= avail %>_1" min="0" max="5" onfocusout="atualizar_nota('avaliacoes_<%= avail %>_1')" value="<%=dadosReceita["avaliacoes"][avail][1]%>" style="display: none">
+							<div class="avaliador">
+								Avaliado por: <a href="<%= dadosReceita["avaliacoes"][avail][3] %>"><%= dadosReceita["avaliacoes"][avail][2] %></a>
+							</div>
 					</div>
 				</div>
 			</div>
@@ -103,12 +111,16 @@
 		<div class="flex_1 flex_c texto_c card" id="categoria">
 			<i class="fas fa-pizza-slice fa-3x"></i>
 			<p>Categoria:</p>
-			<p id="categoria_receita"><%= dadosReceita["receita"][0] %></p>
+			<p id="categoria_receita" onclick="abrir_input('form_categoria_receita')"><%= dadosReceita["receita"][0] %></p>
+
+			<input name="categoria_receita" id="form_categoria_receita" onfocusout="abrir_campo('categoria_receita')" value="<%= dadosReceita["receita"][0] %>" style="display: none">
+			</input>
+
 		</div>
 		<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
 			<i class="far fa-clock fa-3x"></i>
 			<p>Tempo de Preparo:</p>
-			<p id="tempo_receita">
+			<p id="tempo_receita" onclick="abrir_input('form_tempo_receita')">
 				<%= dadosReceita["receita"][1] %>
 				<% if( parseInt( dadosReceita["receita"][1] ) == 1){ %>
 					<%= " minuto" %>
@@ -116,11 +128,14 @@
 					<%= " minutos" %>
 				<% } %>	
 			</p>
+
+			<input name="tempo_receita" id="form_tempo_receita" onfocusout="abrir_campo('tempo_receita')" value="<%= dadosReceita["receita"][1] %>" style="display: none">
+			</input>
 		</div>
 		<div class="flex_1 flex_c texto_c card" id="porcoes">
 			<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
 			<p>Rendimento:</p>
-			<p id="quantidade_receita">
+			<p id="quantidade_receita" onclick="abrir_input('form_quantidade_receita')">
 				<%= dadosReceita["receita"][2] %>
 				<% if( parseInt( dadosReceita["receita"][2] ) == 1){ %>
 					<%= " pessoa" %>
@@ -128,24 +143,33 @@
 					<%= " pessoas" %>
 				<% } %>		
 			</p>
+			<input name="quantidade_receita" id="form_quantidade_receita" onfocusout="abrir_campo('quantidade_receita')" value="<%= dadosReceita["receita"][2] %>" style="display: none">
+			</input>
 		</div>
 	</div>
 	<div>
 		<h3>Ingredientes</h3>
 		<div class="card">
-			<ul id="ingredientes">
+			<ul id="ingredientes" onclick="abrir_input('form_ingredientes')">
 				<% for(count = 0; count< dadosReceita["ingredientes"].length; count = count + 1) { %>
 					<li><%= dadosReceita["ingredientes"][count] %></li>
 				<% } %>
 			</ul>
+			<!--------------------------------------------- -->
+			<textarea cols="100" rows="5" class="text_area form_field" name="ingredientes" id="form_ingredientes" onfocusout="atualizar_lista('ingredientes')" style="display: none">
+				<%= dadosReceita["ingredientes"][0] %>
+			</textarea>
 		</div>
 		<h3>Preparo</h3>
 		<div class="card">
-			<ol id="preparo">
+			<ol id="preparo" onclick="abrir_input('form_preparo')">
 				<% for(count = 0; count< dadosReceita["preparo"].length; count = count + 1) { %>
 					<li><%= dadosReceita["preparo"][count] %></li>
 				<% } %>
 			</ol>
+			<textarea cols="100" rows="5" class="text_area form_field" name="preparo" id="form_preparo" onfocusout="atualizar_lista('preparo')" style="display: none">
+				<%= dadosReceita["preparo"][0] %>
+			</textarea>
 		</div>
 	</div>
 	<h2>Onde encontar</h2>
@@ -228,12 +252,31 @@
 
 	function abrir_campo( id ){
 		var elemento = get_form_id(id);
-		console.log(id);
-		console.log(elemento);
 		document.getElementById(id).style.display = "block";
 		document.getElementById(id).innerHTML = document.getElementById(elemento).value;
 		document.getElementById(elemento).style.display = "none";
 
 	};
+
+	function atualizar_nota( id ){
+		abrir_campo(id);
+	}
+
+	function atualizar_lista(id){
+		var elemento = get_form_id(id);
+		var linhas = document.getElementById(elemento).value.split("\n");
+		console.log(linhas[1]);
+		document.getElementById(id).style.display = "block";
+		document.getElementById(elemento).style.display = "none";
+
+		//inserindo lista
+		texto = "";
+
+		for(var count = 0; count<linhas.length; count++){
+			texto += "<li>"+linhas[count]+"</li>";
+		}
+
+		document.getElementById(id).innerHTML = texto;
+	}
 
 	document.getElementById('form_nome_receita').focus();
