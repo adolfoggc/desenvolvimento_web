@@ -12,6 +12,8 @@ const app = express()
 const fs = require("fs");
 const path = require('path');
 
+const multer = require('multer');
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
