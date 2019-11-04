@@ -212,6 +212,28 @@ app.get('/receita/:rec', function(req,res) {
 	});
 });
 
+app.get('/receita/edit/:rec', function(req,res) {
+
+	// Carrega cookies de preferências (cookie, nome, valor padrão)
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+	var diret; 
+	diret = path.join(__dirname+'/public/data/'+req.params.rec);	
+	fs.readFile(diret+'.json', function (err, data) {
+		if (err) {
+			res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+			return console.error(err);
+		}  
+		dadosReceita = require(diret+'.json');
+		step = 2;
+		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
+		//res.cookie('lastCv', :rec);
+		var recipe_id = req.params.rec;
+		//res.cookie('ultimaReceita', req.params.rec, { maxAge: 9000, httpOnly: true });
+		res.render('edit_recipes', {style, size, dadosReceita, step, recipe_id});
+	});
+});
+
 app.get('/contato', (req, res) => {
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
@@ -238,7 +260,9 @@ app.get('/config', (req, res) => {
 	}
 
   res.render('config', {style, size})
-})
+});
+
+
 
 app.listen(8080, function () {
   console.log('Example app listening on port 8080!')
