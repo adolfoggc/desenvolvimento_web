@@ -46,9 +46,9 @@
 	
 	"receitas_semelhantes" :
 	[
-		[	"1", "Miojo Supremo de Asgard", "1.jpg"],
-		[	"5", "Nuggets de Carne de Porco", "5.jpg"],
-		[	"6", "Churrasco do Desejo Canino", "6.jpg"]
+		[	"1", "Miojo Supremo de Asgard"],
+		[	"5", "Nuggets de Carne de Porco"],
+		[	"6", "Churrasco do Desejo Canino"]
 	]
 
 }

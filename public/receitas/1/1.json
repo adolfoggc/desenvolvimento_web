@@ -2,10 +2,8 @@
 {
 	"nome_receita" : "Miojo Supremo de Asgard",
 	"descricao" : "O Miojo Supremo de Asgard é a solução fácil e requintada que pode salvar uma noite onde tudo deu errado. Refeição de fácil digestão e repleta de fibras. Satisfação pela comida é meu lema, vem comigo e não trema!",
-	"imagem_receita" : "1.jpg",
 	"op" : "Físico Turista",
 	"link_op" : "#",
-	"avatar_op" : "1.jpeg",
 	"avaliacoes" : 
 	[
 		[
@@ -55,9 +53,9 @@
 	
 	"receitas_semelhantes" :
 	[
-		[	"5", "Nuggets de Carne de Porco", "5.jpg"],
-		[	"2", "Macarronada de Macarrão", "2.jpg"],
-		[	"6", "Churrasco do Desejo Canino", "6.jpg"]
+		["5", "Nuggets de Carne de Porco"],
+		["2", "Macarronada de Macarrão"],
+		["6", "Churrasco do Desejo Canino"]
 	]
 
 }

@@ -6,7 +6,7 @@
 	</h1>
 </div>
 <div id="frame_imagem">
-	<img id="imagem_receita" class="imagem" src="/imagens/receitas/<%= dadosReceita["imagem_receita"] %>" alt="Imagem da receita">
+	<img id="imagem_receita" class="imagem" src="/receitas/<%= recipe_id %>/receita.jpg" alt="Imagem da receita">
 </div>
 <div id="informacoes" class="expandida_grid_4">	
 	<div class="card">
@@ -27,7 +27,7 @@
  			 			Nova Receita
  			 		<% } %>
 				</p>
-				<img class="flex_1 avatar" id="imagem_user" src="/imagens/avatar/<%= dadosReceita["avatar_op"] %>">
+				<img class="flex_1 avatar" id="imagem_user" src="/receitas/<%= recipe_id %>/avatar.jpeg">
 			</div>
 		</div>
 	</div>
@@ -168,8 +168,8 @@
 <div class="flex_r" id="receitas_semelhantes">
 	<% for(count = 0; count < dadosReceita["receitas_semelhantes"].length; count = count + 1) { %>
 		<a href="<%= dadosReceita["receitas_semelhantes"][count][0]%>" class="flex_1 alinhar_centro">
-			<img src="/imagens/receitas/
-			<%= dadosReceita["receitas_semelhantes"][count][2] %>" class="flex_1">
+			<img src="/receitas/<%= dadosReceita["receitas_semelhantes"][count][0] %>/receita.jpg"
+			 class="flex_1">
 			<p class="flex_1 texto_c">
 				<%= dadosReceita["receitas_semelhantes"][count][1] %>
 			</p>

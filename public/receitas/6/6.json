@@ -43,9 +43,9 @@
 	
 	"receitas_semelhantes" :
 	[
-		[	"5", "Nuggets de Carne de Porco", "5.jpg"],
-		[	"2", "Macarronada de Macarrão", "2.jpg"],
-		[	"1", "Miojo Supremo de Asgard", "1.jpg"]
+		[	"5", "Nuggets de Carne de Porco"],
+		[	"2", "Macarronada de Macarrão"],
+		[	"1", "Miojo Supremo de Asgard"]
 	]
 
 }
