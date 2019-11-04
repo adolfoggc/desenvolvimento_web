@@ -29,8 +29,24 @@ app.use(expressLayouts)
  */
 app.use(cookieParser());
 
+var maxSize = 500*1024; // 500kb
 
+const storage = multer.diskStorage({
+    // destino do arquivo
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    // nome do arquivo
+    filename: function (req, file, cb) {
+        cb(null, file.originalname + '-' + Date.now());
+    }
+});
 
+//uploader
+const upload = multer({
+    storage : storage,
+    limits  : { fileSize: maxSize }
+}).single('file');
 
 //funções
 function titulo_aleatorio(){
@@ -264,34 +280,33 @@ app.get('/config', (req, res) => {
 
 //EDIT
 app.post('/receita/edit/update/:rec', function(req, res) {
-    // upload(req, res, function (err) {
-    //     if (err) {
-    //         res.send(' <h2>O seu upload NÃO foi realizado! <h2>');
-    //         return console.log(err);
-    //     }
+    upload(req, res, function (err) {
+        if (err) {
+            res.send(' <h2>O seu upload NÃO foi realizado! <h2>');
+            return console.log(err);
+        }
        
-    //     res.send('<h2>Upload realizado com sucesso! </h2>'+
-    //     '<p> os demais campos enviados no formulário foram '
-    //     +req.body.campo1 + ', '
-    //     +req.body.campo2 + ', '
-    //     +req.body.campo3 + '! </p>');
+        // res.send('<h2>Upload realizado com sucesso! </h2>'+
+        // '<p> os demais campos enviados no formulário foram '
+        // +req.body.campo1 + ', '
+        // +req.body.campo2 + ', '
+        // +req.body.campo3 + '! </p>');
        
-    //     var direct = path.join(__dirname + '/public/data/');
+        // var direct = path.join(__dirname + '/public/data/');
+       	var direct = path.join(__dirname + '/public/data/');
+        var new_data = JSON.stringify({
+            nome_receita : req.body.nome_receita,
+            descricao : req.body.descricao
+        });
        
-    //     var new_data = JSON.stringify({
-    //         campo1 : req.body.campo1,
-    //         campo2 : req.body.campo2,
-    //         campo3 : req.body.campo3
-    //     });
-       
-    //     fs.writeFile(direct + '/test.json', new_data, function (err, data){
-    //         if (err) {
-    //             console.log('Erro gravando o arquivo test.json');
-    //             return console.error(err);
-    //         }
-    //     });
-    // }); upload
-    res.redirect('/');
+        fs.writeFile(direct + '/test.json', new_data, function (err, data){
+            if (err) {
+                console.log('Erro gravando o arquivo test.json');
+                return console.error(err);
+            }
+    			res.redirect('/');
+        });
+    }); //upload
 });
 
 

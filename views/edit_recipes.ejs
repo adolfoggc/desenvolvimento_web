@@ -1,19 +1,23 @@
 <%- contentFor('secao') %>
 <form action='update/<%= recipe_id %>' method='post' encType="multipart/form-data">
-	<div class="container_cabecalho">
-		<h1 id="nome_receita">
+	<div class="container_cabecalho" style="text-align:center;">
+		<h1 id="nome_receita" onclick="abrir_input('form_nome_receita')" style="display: none;">
 			<%= dadosReceita["nome_receita"] %>
 		</h1>
+
+		<input name="nome_receita" id="form_nome_receita" onfocusout="abrir_campo('nome_receita')" value="<%= dadosReceita["nome_receita"] %>" style="margin: auto">
+		</input>
+
 	</div>
 	<div id="frame_imagem">
 		<img id="imagem_receita" class="imagem" src="/imagens/receitas/<%= dadosReceita["imagem_receita"] %>" alt="Imagem da receita">
 	</div>
 	<div id="informacoes" class="expandida_grid_4">	
 		<div class="card">
-			<p class="texto_j" id="descricao">
+			<p class="texto_j" id="descricao" onclick="abrir_input('form_descricao');">
 				<%= dadosReceita["descricao"] %>
 			</p>
-			<textarea cols="100" rows="5" class="text_area" name="descricao">
+			<textarea cols="100" rows="5" class="text_area form_field" name="descricao" id="form_descricao" onfocusout="abrir_campo('descricao')" style="display: none">
 				<%= dadosReceita["descricao"] %>
 			</textarea>
 			<div id="dados_info">
@@ -190,3 +194,43 @@
 <%- contentFor('script') %>
 	setCookie("ultimaReceita", <%= recipe_id %>, 10);
 	console.log("opa");
+
+	function get_form_id( id ) {
+		return "form_"+id;
+	}
+
+	function get_element_id( id ){
+		return id.substring(5, id.length);
+	}
+
+	function fechar_inputs() {
+		var inputs = document.getElementsByClassName("form_field");
+		var original_field = "";
+		console.log("inputs = "+inputs.length);
+		for (var i = 0; i < inputs.length; i++) {
+	    original_field = get_element_id(inputs[i].id);
+
+	    document.getElementById(original_field).innerHTML = inputs[i].innerHTML;;
+	    
+	    inputs[i].style.display = "none";
+
+		}
+	};
+
+	function abrir_input( id ){
+		document.getElementById(id).style.display = "block";
+		document.getElementById(get_element_id(id)).style.display = "none";
+		document.getElementById(id).focus();
+	};
+
+	function abrir_campo( id ){
+		var elemento = get_form_id(id);
+		console.log(id);
+		console.log(elemento);
+		document.getElementById(id).style.display = "block";
+		document.getElementById(id).innerHTML = document.getElementById(elemento).value;
+		document.getElementById(elemento).style.display = "none";
+
+	};
+
+	document.getElementById('form_nome_receita').focus();
