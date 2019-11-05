@@ -289,39 +289,51 @@ app.get('/config', (req, res) => {
 
 //EDIT
 app.post('/receita/edit/update/:rec', function(req, res) {
-    upload(req, res, function (err) {
+  upload(req, res, function (err) {
+    if (err) {
+        res.send('<h1>Tururu...</h1>');
+        return console.log(err);
+    }
+   
+   	var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
+    backup_arquivo("receita",direct,fs);
+    fs.readFile(direct+'.json', function (err, data) {
+			if (err) {
+				res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+				return console.error(err);
+			}
+			//json copiado  
+			dadosReceita = require(direct+'.json');
+
+			//novos dados	
+			// var new_data = JSON.stringify({
+   //      nome_receita : req.body.nome_receita,
+   //      descricao : req.body.descricao,
+   //      preparo : req.body.preparo,
+   //      ingredientes : req.body.ingredientes,
+   //      receita_categoria : req.body.categoria_receita,
+   //      receita_tempo : req.body.tempo_receita,
+   //      receita_quantidade : req.body.quantidade_receita,
+   //      receita_original : req.body.receita_original
+   //  	});
+ 		  dadosReceita["nome_receita"] = req.body.nome_receita;
+      dadosReceita["descricao"] = req.body.descricao;
+      dadosReceita["preparo"] = req.body.preparo;
+      dadosReceita["ingredientes"] = req.body.ingredientes;
+      dadosReceita["receita_categoria"] = req.body.categoria_receita;
+      dadosReceita["receita_tempo"] = req.body.tempo_receita;
+      dadosReceita["receita_quantidade"] = req.body.quantidade_receita;
+      dadosReceita["receita_original"] = req.body.receita_original;
+			
+      fs.writeFile(direct + '/receita.json', dadosReceita, function (err, data){
         if (err) {
-            res.send('<h1>Tururu...</h1>');
-            return console.log(err);
+          console.log('Erro gravando atualizações');
+          return console.error(err);
         }
-       
-        // res.send('<h2>Upload realizado com sucesso! </h2>'+
-        // '<p> os demais campos enviados no formulário foram '
-        // +req.body.campo1 + ', '
-        // +req.body.campo2 + ', '
-        // +req.body.campo3 + '! </p>');
-       
-        // var direct = path.join(__dirname + '/public/data/');
-       	var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
-        backup_arquivo("receita",direct,fs);
-        
-        var new_data = JSON.stringify({
-            nome_receita : req.body.nome_receita,
-            descricao : req.body.descricao,
-            preparo : req.body.preparo,
-            ingredientes : req.body.ingredientes,
-            receita : [req.body.categoria_receita, req.body.tempo_receita, req.body.quantidade_receita ],
-            receita_original : req.body.receita_original
-        });
-       
-        fs.writeFile(direct + '/dados.json', new_data, function (err, data){
-            if (err) {
-                console.log('Erro gravando o arquivo test.json');
-                return console.error(err);
-            }
-    			res.redirect('/');
-        });
-    }); //upload
+  			res.redirect('/');
+      });
+		}); 
+  }); //upload
 });
 
 

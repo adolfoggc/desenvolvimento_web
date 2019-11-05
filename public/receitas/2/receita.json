@@ -1,0 +1,54 @@
+
+{
+	"nome_receita" : "Macarronada de Macarrão",
+	"descricao" : "Esta receita é uma dádiva italiana. Tem sabor, crocância e consistência que só o macarrão pode ter e é preparada sem mistérios. Quer sabor? É aqui!",
+	"imagem_receita" : "2.jpg",
+	"op" : "Físico Turista",
+	"link_op" : "#",
+	"avatar_op" : "1.jpeg",
+	"avaliacoes" : 
+	[
+		[
+			"Ahhh... Micalatéia! Esse macarrão é mais ou menos", "3", "Isaac do Egito", "#"
+		],
+		[
+			"Qual a diferença entre isso e miojo?", "2", "Bom Senso", "#"
+		]
+	],
+	"receita" :
+	[
+		"Massas", "10", "2"
+	],
+	"ingredientes" : 
+	[
+		"1 pacote de Macarrão Miojo","200g de macarrão espaguete",
+		"100g de macarrão talharim", "100g de macarrão para yakisoba",
+		"Opcional: 2 dentes de alho",
+		"Sal à gosto (adiciono uma mão de sal)"
+	],
+	"preparo" :
+	[
+
+    "Em uma panela, adicione 1l de água e deixe ferver",
+    "Quebre os macarrões que não são miojo em pedaços de tamanho variado e os misture",
+    "Quando a água ferver, adicione os macarrões quebrados",
+    "Prove os macarrões até que fiquem no ponto desejado",
+    "Jogue a mão de sal dizendo a frase ritualística \"Eita, caraca!\"",
+    "Quebre, finalmente, o miojo e sirva tudo quente, antes da crocância do miojo acabar",
+    "Adicione toppings que desejar. Dentes de alho cru fatiados dão sabor!"
+	],
+
+	"restaurantes" : 
+	[
+		[ "Toca da Catita", "#", "#", "2" ],
+		[ "Grude's", "#", "#", "1" ]
+	],
+	
+	"receitas_semelhantes" :
+	[
+		[	"1", "Miojo Supremo de Asgard"],
+		[	"5", "Nuggets de Carne de Porco"],
+		[	"6", "Churrasco do Desejo Canino"]
+	]
+
+}

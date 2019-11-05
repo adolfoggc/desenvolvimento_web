@@ -21,6 +21,10 @@
 	[
 		"Massas", "10", "1"
 	],
+	"receita_original" : "",
+  "receita_tempo" : "10",
+  "receita_quantidade" : "1",
+	"receita_categoria" : "Massas",
 	"ingredientes" : 
 	[
 		"1 pacote de Macarrão Miojo","5 colheres de sopa de margarina",
@@ -30,7 +34,6 @@
 	],
 	"preparo" :
 	[
-
     "Coloque 1l de água para ferver em uma panela grande",
     "Em outra panela, coloque a banha de porco para fritar",
     "Quando a banha começar a estourar de forma perigosa, adicione a fussura rapidamente, mas tomando cuidado para não espirrar a gordura quente em seus olhos e pele",
