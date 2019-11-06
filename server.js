@@ -34,11 +34,11 @@ var maxSize = 500*1024; // 500kb
 const storage = multer.diskStorage({
     // destino do arquivo
     destination: function (req, file, cb) {
-        cb(null, 'public/')
+        cb(null, 'public/receitas/'+req.params.rec);
     },
     // nome do arquivo
     filename: function (req, file, cb) {
-        cb(null, file.originalname + '-' + Date.now());
+        cb(null, 'receita.jpg');
     }
 });
 
@@ -144,7 +144,7 @@ app.get('/', (req, res) => {
   	});
   	var dadosReceitas = new Array; 
 		var count_receita = 0;
-		console.log("Valor em receitas: "+receitas);	
+		//console.log("Valor em receitas: "+receitas);	
 
 		// Carrega receita
 		var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
@@ -301,6 +301,7 @@ app.get('/config', (req, res) => {
 
 //EDIT
 app.post('/receita/edit/update/:rec', function(req, res) {
+  //chamando multer
   upload(req, res, function (err) {
     if (err) {
         res.send('<h1>Tururu...</h1>');
@@ -326,7 +327,7 @@ app.post('/receita/edit/update/:rec', function(req, res) {
       dadosReceita.receita_tempo = req.body.tempo_receita;
       dadosReceita.receita_quantidade = req.body.quantidade_receita;
       dadosReceita.receita_original = req.body.receita_original;
-			console.log(dadosReceita);
+			//console.log(dadosReceita);
       //criar_arquivo(direct + '/receita.json', dadosReceita,fs);
       fs.writeFile(direct + '/receita.json', JSON.stringify(dadosReceita), function (err, data){
         if (err) {
