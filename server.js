@@ -105,12 +105,22 @@ function checagem_cookie(cookie, nome_cookie, valor_padrao){
 	return valor;
 }
 
-function backup_arquivo( arquivo, endereco, fs ){
-	fs.copyFile(endereco+"/"+arquivo+'.json', endereco+"/backup_"+arquivo+'.json', (err) => {
+function backup_arquivo( arquivo, endereco, fs, extensao ){
+	fs.copyFile(endereco+"/"+arquivo+'.'+extensao, endereco+"/backup_"+arquivo+'.'+extensao, (err) => {
 	  if (err){ 
 	  	throw err;
 	  	console.log(err);
 	  }
+	});	
+}
+
+function rollback( arquivo, endereco, fs, extensao ){
+	fs.copyFile(endereco+"/backup_"+arquivo+'.'+extensao, endereco+"/"+arquivo+'.'+extensao, (err) => {
+	  if (err){ 
+	  	throw err;
+	  	console.log(err);
+	  }
+	  console.log("rollback!");
 	});	
 }
 
@@ -302,14 +312,16 @@ app.get('/config', (req, res) => {
 //EDIT
 app.post('/receita/edit/update/:rec', function(req, res) {
   //chamando multer
+  var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
+  backup_arquivo("receita",direct,fs, "jpg");
   upload(req, res, function (err) {
     if (err) {
         res.send('<h1>Tururu...</h1>');
+        rollback("receita",direct,fs, "jpg");
         return console.log(err);
+
     }
    
-   	var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
-    backup_arquivo("receita",direct,fs);
     fs.readFile(direct+'/receita.json', function (err, data) {
 			if (err) {
 				res.send('Dados inexistentes ou incompletos para '+req.params.rec);
