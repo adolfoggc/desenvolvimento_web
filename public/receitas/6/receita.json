@@ -12,24 +12,11 @@
 			"Uma delícia! E o cozinheiro é excelente!", "5", "Mãe do Físico Turista", "#"
 		]
 	],
-	"receita" :
-	[
-		"Carnes", "30", "2"
-	],
-	"ingredientes" : 
-	[
-		"Carne. Até dar uma dor",
-		"Sal à gosto",
-		"Bacon até entupir as veias"
-	],
-	"preparo" :
-	[
-
-    "Taca sal nas carnes",
-    "Joga no fogo",
-    "Colocar um cachorro pra observar o processo todo",
-    "Come tudo quente quando estiver no ponto"
-	],
+	"receita_tempo" : "30",
+	"receita_quantidade" : "2",
+	"receita_categoria" : "Carnes",
+	"ingredientes" : "Carne. Até dar uma dor\nSal à gosto\nBacon até entupir as veias",
+	"preparo" :	"Taca sal nas carnes\nJoga no fogo\nColocar um cachorro pra observar o processo todo\nCome tudo quente quando estiver no ponto",
 
 	"restaurantes" : 
 	[
