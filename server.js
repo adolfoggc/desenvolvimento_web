@@ -34,7 +34,7 @@ var maxSize = 500*1024; // 500kb
 const storage = multer.diskStorage({
     // destino do arquivo
     destination: function (req, file, cb) {
-        cb(null, 'uploads/')
+        cb(null, 'public/')
     },
     // nome do arquivo
     filename: function (req, file, cb) {
