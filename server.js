@@ -333,7 +333,23 @@ app.post('/receita/edit/update/:rec', function(req, res) {
           console.log('Erro gravando atualizações');
           return console.error(err);
         }
-  			res.redirect('/');
+        //atualizar arquivo inicial
+        let caminho_indice = path.join(__dirname + '/public/data/recipe_names.json');
+        fs.readFile(caminho_indice, function (err, data) {
+					if (err) {
+						res.send('Dados inexistentes ou incompletos para arquivo de índice');
+						return console.error(err);
+					}
+      		arquivo_indice = require(caminho_indice);
+      		arquivo_indice[req.params.rec][0] = req.body.nome_receita;
+      		fs.writeFile(caminho_indice, JSON.stringify(arquivo_indice), function (err, data){
+		        if (err) {
+		          console.log('Erro gravando atualizações');
+		          return console.error(err);
+		        }	
+  					res.redirect('/');
+  				});
+  			});	
       });
 		}); 
   }); //upload
