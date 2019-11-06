@@ -93,14 +93,14 @@
 	<div class="flex_1 flex_c texto_c card" id="categoria">
 		<i class="fas fa-pizza-slice fa-3x"></i>
 		<p>Categoria:</p>
-		<p id="categoria_receita"><%= dadosReceita["receita"][0] %></p>
+		<p id="categoria_receita"><%= dadosReceita["receita_categoria"] %></p>
 	</div>
 	<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
 		<i class="far fa-clock fa-3x"></i>
 		<p>Tempo de Preparo:</p>
 		<p id="tempo_receita">
-			<%= dadosReceita["receita"][1] %>
-			<% if( parseInt( dadosReceita["receita"][1] ) == 1){ %>
+			<%= dadosReceita["receita_tempo"] %>
+			<% if( parseInt( dadosReceita["receita_tempo"] ) == 1){ %>
 				<%= " minuto" %>
 			<% } else { %>
 				<%= " minutos" %>
@@ -111,8 +111,8 @@
 		<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
 		<p>Rendimento:</p>
 		<p id="quantidade_receita">
-			<%= dadosReceita["receita"][2] %>
-			<% if( parseInt( dadosReceita["receita"][2] ) == 1){ %>
+			<%= dadosReceita["receita_quantidade"] %>
+			<% if( parseInt( dadosReceita["receita_quantidade"] ) == 1){ %>
 				<%= " pessoa" %>
 			<% } else { %>
 				<%= " pessoas" %>
@@ -126,7 +126,9 @@
 		<ul id="ingredientes">
 			<% var linhas = dadosReceita["ingredientes"].split("\n"); %>
 			<% for(count = 0; count< linhas.length; count = count + 1) { %>
-				<li><%= linhas[count] %></li>
+				<% if(linhas[count] != ""){ %>
+					<li><%= linhas[count] %></li>
+				<% } %>
 			<% } %>
 		</ul>
 	</div>
@@ -135,7 +137,9 @@
 		<ol id="preparo">
 			<% var linhas = dadosReceita["preparo"].split("\n"); %>
 			<% for(count = 0; count< linhas.length; count = count + 1) { %>
-				<li><%= linhas[count] %></li>
+				<% if(linhas[count] != ""){ %>
+					<li><%= linhas[count] %></li>
+				<% } %>
 			<% } %>
 		</ol>
 	</div>

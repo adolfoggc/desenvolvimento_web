@@ -97,9 +97,9 @@ function acrescentar_nova_receita(numero, novos_dados){
 function checagem_cookie(cookie, nome_cookie, valor_padrao){
 	valor = cookie;
 	if (valor != undefined) {
-		console.log('Valor em '+nome_cookie+': '+ valor +'\n');
+		//console.log('Valor em '+nome_cookie+': '+ valor +'\n');
 	} else {
-		console.log('Cookie Vazio: '+valor_padrao+'\n');
+		//console.log('Cookie Vazio: '+valor_padrao+'\n');
 		valor = valor_padrao;
 	}
 	return valor;
@@ -309,14 +309,14 @@ app.post('/receita/edit/update/:rec', function(req, res) {
    
    	var direct = path.join(__dirname + '/public/receitas/'+req.params.rec);
     backup_arquivo("receita",direct,fs);
-    fs.readFile(direct+'.json', function (err, data) {
+    fs.readFile(direct+'/receita.json', function (err, data) {
 			if (err) {
 				res.send('Dados inexistentes ou incompletos para '+req.params.rec);
 				return console.error(err);
 			}
 			//json copiado  
-			dadosReceita = require(direct+'.json');
-
+			dadosReceita = require(direct+'/receita.json');
+			console.log(dadosReceita);
  		  dadosReceita["nome_receita"] = req.body.nome_receita;
       dadosReceita["descricao"] = req.body.descricao;
       dadosReceita["preparo"] = req.body.preparo;
@@ -325,7 +325,7 @@ app.post('/receita/edit/update/:rec', function(req, res) {
       dadosReceita["receita_tempo"] = req.body.tempo_receita;
       dadosReceita["receita_quantidade"] = req.body.quantidade_receita;
       dadosReceita["receita_original"] = req.body.receita_original;
-			
+			console.log(dadosReceita);
       fs.writeFile(direct + '/receita.json', dadosReceita, function (err, data){
         if (err) {
           console.log('Erro gravando atualizações');
