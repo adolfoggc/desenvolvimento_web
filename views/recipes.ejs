@@ -124,16 +124,18 @@
 	<h3>Ingredientes</h3>
 	<div class="card">
 		<ul id="ingredientes">
-			<% for(count = 0; count< dadosReceita["ingredientes"].length; count = count + 1) { %>
-				<li><%= dadosReceita["ingredientes"][count] %></li>
+			<% var linhas = dadosReceita["ingredientes"].split("\n"); %>
+			<% for(count = 0; count< linhas.length; count = count + 1) { %>
+				<li><%= linhas[count] %></li>
 			<% } %>
 		</ul>
 	</div>
 	<h3>Preparo</h3>
 	<div class="card">
 		<ol id="preparo">
-			<% for(count = 0; count< dadosReceita["preparo"].length; count = count + 1) { %>
-				<li><%= dadosReceita["preparo"][count] %></li>
+			<% var linhas = dadosReceita["preparo"].split("\n"); %>
+			<% for(count = 0; count< linhas.length; count = count + 1) { %>
+				<li><%= linhas[count] %></li>
 			<% } %>
 		</ol>
 	</div>
