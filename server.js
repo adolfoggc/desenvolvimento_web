@@ -54,7 +54,7 @@ function titulo_aleatorio(){
 	return rand = titulos[Math.floor(Math.random() * titulos.length)];
 }
 
-function criar_arquivo(nome, conteudo){
+function criar_arquivo(nome, conteudo, fs){
 	fs.writeFile(nome, conteudo, function (err) {
   	if (err) throw err;
   	frase = 'Arquivo Criado, '+ titulo_aleatorio();
@@ -316,17 +316,19 @@ app.post('/receita/edit/update/:rec', function(req, res) {
 			}
 			//json copiado  
 			dadosReceita = require(direct+'/receita.json');
+			
+			//console.log(typeof(dadosReceita));
+ 		  dadosReceita.nome_receita = req.body.nome_receita;
+      dadosReceita.descricao = req.body.descricao;
+      dadosReceita.preparo = req.body.preparo;
+      dadosReceita.ingredientes = req.body.ingredientes;
+      dadosReceita.receita_categoria = req.body.categoria_receita;
+      dadosReceita.receita_tempo = req.body.tempo_receita;
+      dadosReceita.receita_quantidade = req.body.quantidade_receita;
+      dadosReceita.receita_original = req.body.receita_original;
 			console.log(dadosReceita);
- 		  dadosReceita["nome_receita"] = req.body.nome_receita;
-      dadosReceita["descricao"] = req.body.descricao;
-      dadosReceita["preparo"] = req.body.preparo;
-      dadosReceita["ingredientes"] = req.body.ingredientes;
-      dadosReceita["receita_categoria"] = req.body.categoria_receita;
-      dadosReceita["receita_tempo"] = req.body.tempo_receita;
-      dadosReceita["receita_quantidade"] = req.body.quantidade_receita;
-      dadosReceita["receita_original"] = req.body.receita_original;
-			console.log(dadosReceita);
-      fs.writeFile(direct + '/receita.json', dadosReceita, function (err, data){
+      //criar_arquivo(direct + '/receita.json', dadosReceita,fs);
+      fs.writeFile(direct + '/receita.json', JSON.stringify(dadosReceita), function (err, data){
         if (err) {
           console.log('Erro gravando atualizações');
           return console.error(err);
