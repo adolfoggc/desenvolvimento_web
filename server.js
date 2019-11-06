@@ -233,13 +233,13 @@ app.get('/receita/:rec', function(req,res) {
 	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 	var diret; 
-	diret = path.join(__dirname+'/public/data/'+req.params.rec);	
-	fs.readFile(diret+'.json', function (err, data) {
+	diret = path.join(__dirname+'/public/receitas/'+req.params.rec);	
+	fs.readFile(diret+'/receita.json', function (err, data) {
 		if (err) {
 			res.send('Dados inexistentes ou incompletos para '+req.params.rec);
 			return console.error(err);
 		}  
-		dadosReceita = require(diret+'.json');
+		dadosReceita = require(diret+'/receita.json');
 		step = 2;
 		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
 		//res.cookie('lastCv', :rec);
