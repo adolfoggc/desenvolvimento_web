@@ -126,7 +126,7 @@
 		<ul id="ingredientes">
 			<% var linhas = dadosReceita["ingredientes"].split("\n"); %>
 			<% for(count = 0; count< linhas.length; count = count + 1) { %>
-				<% if(linhas[count] != ""){ %>
+				<% if(linhas[count] != "\t\t\t" && linhas[count] != '\t\t\t\r'){ %>
 					<li><%= linhas[count] %></li>
 				<% } %>
 			<% } %>
@@ -137,7 +137,7 @@
 		<ol id="preparo">
 			<% var linhas = dadosReceita["preparo"].split("\n"); %>
 			<% for(count = 0; count< linhas.length; count = count + 1) { %>
-				<% if(linhas[count] != ""){ %>
+				<% if(linhas[count] != "\t\t\t" && linhas[count] != '\t\t\t\r'){ %>
 					<li><%= linhas[count] %></li>
 				<% } %>
 			<% } %>
