@@ -114,25 +114,38 @@ function backup_arquivo( arquivo, endereco, fs ){
 	});	
 }
 
+function contar_pastas(fs,direct){
+	//conta e recebe nome
+	var pastas = new Array();
+	fs.readdir(direct, (err, files) => {
+	  files.forEach(file => {
+	    pastas.push(file);
+	  });
+	  return pastas;
+	});
+}
+
 //coisas sérias
 
 app.get('/', (req, res) => {
-
-
-	var pasta_receitas = path.join(__dirname+'/public/data')
+	//path de arquivos de receitas
+	var pasta_receitas = path.join(__dirname+'/public/receitas')
 	//contagem de arquivos na pasta
 	fs.readdir(pasta_receitas, (err, files) => {
 		counted_recipes = files.length;
-		receitas = new  Array();
 		
+		//receberá ids válidas de receitas
+		var receitas = new Array();
+		// receitas = contar_pastas(fs, __dirname+'/public/receitas');
+
 		files.forEach(file => {
 			var filename = path.basename(file, '.json');
     	receitas.push(filename);
   	});
   	var dadosReceitas = new Array; 
 		var count_receita = 0;
-		
-			
+		console.log("Valor em receitas: "+receitas);	
+
 		// Carrega receita
 		var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
 
@@ -153,7 +166,6 @@ app.get('/', (req, res) => {
 			return console.error(err);
 		}  
 		dadosReceitas = require(diret);
-		
 		step = undefined;
 		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});
 		
@@ -305,17 +317,6 @@ app.post('/receita/edit/update/:rec', function(req, res) {
 			//json copiado  
 			dadosReceita = require(direct+'.json');
 
-			//novos dados	
-			// var new_data = JSON.stringify({
-   //      nome_receita : req.body.nome_receita,
-   //      descricao : req.body.descricao,
-   //      preparo : req.body.preparo,
-   //      ingredientes : req.body.ingredientes,
-   //      receita_categoria : req.body.categoria_receita,
-   //      receita_tempo : req.body.tempo_receita,
-   //      receita_quantidade : req.body.quantidade_receita,
-   //      receita_original : req.body.receita_original
-   //  	});
  		  dadosReceita["nome_receita"] = req.body.nome_receita;
       dadosReceita["descricao"] = req.body.descricao;
       dadosReceita["preparo"] = req.body.preparo;
