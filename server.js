@@ -260,7 +260,6 @@ app.get('/receita/:rec', function(req,res) {
 });
 
 app.get('/receita/edit/:rec', function(req,res) {
-
 	// Carrega cookies de preferências (cookie, nome, valor padrão)
 	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
@@ -280,6 +279,28 @@ app.get('/receita/edit/:rec', function(req,res) {
 		res.render('edit_recipes', {style, size, dadosReceita, step, recipe_id});
 	});
 });
+
+
+//ATIVIDADE 7
+app.post('/create', function(req,res) {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+	step = 2;
+	res.redirect('/');
+	
+});//fim create
+
+app.get('/nova_receita', function(req,res) {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+	step = 2;
+
+	var dadosReceita = {"nome_receita":"Digite o Nome da Receita","descricao":"Faça uma apresentação de sua receita","ingredientes":"Liste os ingredientes\nSeparar cada um com um ENTER", "preparo" : "Liste os Passos do preparo\nSeparar cada um com um ENTER","receita":["Massas","10","1"],"receita_original":"Coloque o link de onde veio a receita original","avaliacoes":[["Muito bom!","1","Coxinha","#"]],"restaurantes":[["Toca da Catita","#","#","0"]],"receitas_semelhantes":[["5","Nuggets de Carne de Porco"],["2","Macarronada de Macarrão"],["6","Churrasco do Desejo Canino"]],"op":"Físico Turista","receita_categoria":"Bebidas","receita_tempo":"1","receita_quantidade":"1"}
+	recipe_id = 1;
+	res.render('nova', {style, size, step, dadosReceita, recipe_id});
+});//fim new
+//FIM ATIVIDADE 7
+
 
 app.get('/contato', (req, res) => {
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
@@ -332,9 +353,9 @@ app.post('/receita/edit/update/:rec', function(req, res) {
 			
 			//console.log(typeof(dadosReceita));
  		  dadosReceita.nome_receita = req.body.nome_receita;
-      dadosReceita.descricao = req.body.descricao;
-      dadosReceita.preparo = req.body.preparo;
-      dadosReceita.ingredientes = req.body.ingredientes;
+      dadosReceita.descricao = req.body.descricao.replace('\t','');
+      dadosReceita.preparo = req.body.preparo.replace('\t','');
+      dadosReceita.ingredientes = req.body.ingredientes.replace('\t','');
       dadosReceita.receita_categoria = req.body.categoria_receita;
       dadosReceita.receita_tempo = req.body.tempo_receita;
       dadosReceita.receita_quantidade = req.body.quantidade_receita;

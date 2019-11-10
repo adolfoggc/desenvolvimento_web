@@ -1,0 +1,248 @@
+
+<%- contentFor('secao') %>
+<form action='create' method='post' encType="multipart/form-data">
+	<div class="container_cabecalho">
+		<h1 id="nome_receita">
+			Nova Receita
+		</h1>
+	</div>
+	<div class="container_cabecalho" style="text-align:center;">
+		<h1 id="nome_receita" onclick="abrir_input('form_nome_receita')" style="display: none;">
+			<%= dadosReceita["nome_receita"] %>
+		</h1>
+
+		<input name="nome_receita" id="form_nome_receita" onfocusout="abrir_campo('nome_receita')" value="<%= dadosReceita["nome_receita"] %>" style="margin: auto">
+		</input>
+	</div>
+	<div id="frame_imagem">
+		<img id="imagem_receita" class="imagem" src="/receitas/<%= recipe_id %>/receita.jpg" alt="Imagem da receita">
+	</div>
+	<!-- UPLOAD DE IMAGEM -->
+	<input type="file" name="file" style="margin: auto">
+	
+	<div id="informacoes" class="expandida_grid_4">	
+		<div class="card">
+			<p class="texto_j" id="descricao" onclick="abrir_input('form_descricao');">
+				<%= dadosReceita["descricao"] %>
+			</p>
+			<textarea cols="100" rows="5" class="text_area form_field" name="descricao" id="form_descricao" onfocusout="abrir_campo('descricao')" style="display: none">
+				<%= dadosReceita["descricao"] %>
+			</textarea>
+			<div id="dados_info">
+				<p>Cadastrado por:</p>
+				<div class="flex_r">
+						Fonte: 
+						<a id="receita_original" onclick="abrir_input('form_receita_original')">
+						<% if (dadosReceita["receita_original"] > '' ){ %>
+							Receita Original
+	 			 		<% } else { %>
+	 			 			Nova Receita
+	 			 		<% } %>
+	 			 		</a>
+	 			 		<input name="receita_original" id="form_receita_original" onfocusout="abrir_campo('receita_original')" value="<%= dadosReceita["receita_original"] %>" style="display: none">
+						</input>
+					</p>
+					<img class="flex_1 avatar" id="imagem_user" src="/receitas/<%= recipe_id %>/avatar.jpeg">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container_cabecalho">
+		<h2>Receita</h2>
+	</div>
+	<div class="expandir_container flex_r">
+		<div class="flex_1 flex_c texto_c card" id="categoria">
+			<i class="fas fa-pizza-slice fa-3x"></i>
+			<p>Categoria:</p>
+			<p id="categoria_receita" onclick="abrir_input('form_categoria_receita')"><%= dadosReceita["receita_categoria"] %></p>
+
+			
+			<select name="categoria_receita" id="form_categoria_receita" onfocusout="abrir_campo('categoria_receita')" value="<%= dadosReceita["receita_categoria"] %>" style="display: none">
+			  <option value="Bebidas">Bebidas</option>
+			  <option value="Carnes">Carnes</option>
+			  <option value="Massas">Massas</option>
+			  <option value="Peixes">Peixes</option>
+			  <option value="Saladas">Saladas</option>
+			  <option value="Sobremesas">Sobremesas</option>
+			</select> 
+
+		</div>
+		<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
+			<i class="far fa-clock fa-3x"></i>
+			<p>Tempo de Preparo:</p>
+			<p id="tempo_receita" onclick="abrir_input('form_tempo_receita')">
+				<%= dadosReceita["receita_tempo"] %>
+				<% if( parseInt( dadosReceita["receita_tempo"] ) == 1){ %>
+					<%= " minuto" %>
+				<% } else { %>
+					<%= " minutos" %>
+				<% } %>	
+			</p>
+
+			<input type="number" min="1" name="tempo_receita" id="form_tempo_receita" onfocusout="atualizar_campo('tempo_receita','m')" value="<%= dadosReceita["receita_quantidade"] %>" style="display: none">
+			</input>
+		</div>
+		<div class="flex_1 flex_c texto_c card" id="porcoes">
+			<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
+			<p>Rendimento:</p>
+			<p id="quantidade_receita" onclick="abrir_input('form_quantidade_receita')">
+				<%= dadosReceita["receita_quantidade"] %>
+				<% if( parseInt( dadosReceita["receita_quantidade"] ) == 1){ %>
+					<%= " pessoa" %>
+				<% } else { %>
+					<%= " pessoas" %>
+				<% } %>		
+			</p>
+			<input type="number" min="1" name="quantidade_receita" id="form_quantidade_receita" onfocusout="atualizar_campo('quantidade_receita','p')" value="<%= dadosReceita["receita_quantidade"] %>" style="display: none">
+			</input>
+		</div>
+	</div>
+	<div>
+		<h3>Ingredientes</h3>
+		<div class="card">
+			<ul id="ingredientes" onclick="abrir_input('form_ingredientes')">
+				<% var linhas = dadosReceita["ingredientes"].split("\n"); %>
+				<% for(count = 0; count< linhas.length; count = count + 1) { %>
+					<% if(linhas[count] != "\t\t\t" && linhas[count] != '\t\t\t\r'){ %>
+						<li><%= linhas[count] %></li>
+					<% } %>
+				<% } %>
+			</ul>
+			<!--------------------------------------------- -->
+			<textarea cols="100" rows="5" class="text_area form_field" name="ingredientes" id="form_ingredientes" onfocusout="atualizar_lista('ingredientes')" style="display: none">
+				<%= dadosReceita["ingredientes"] %>
+			</textarea>
+		</div>
+		<h3>Preparo</h3>
+		<div class="card">
+			<ol id="preparo" onclick="abrir_input('form_preparo')">
+				<% var linhas = dadosReceita["preparo"].split("\n"); %>
+				<% for(count = 0; count< linhas.length; count = count + 1) { %>
+					<% if(linhas[count] != "\t\t\t" && linhas[count] != '\t\t\t\r'){ %>
+						<li><%= linhas[count] %></li>
+					<% } %>
+				<% } %>
+			</ol>
+			<textarea cols="100" rows="5" class="text_area form_field" name="preparo" id="form_preparo" onfocusout="atualizar_lista('preparo')" style="display: none">
+				<%= dadosReceita["preparo"] %>
+			</textarea>
+		</div>
+	</div>
+	<h2>Onde encontar</h2>
+	<div id="restaurantes">
+		<% 
+		var rest = 0;
+		for(rest = 0 ; rest < dadosReceita["restaurantes"].length ; rest = rest + 1){ %>
+			<div class="card">
+				<div>
+					<p><%= dadosReceita["restaurantes"][rest][0] %> - 
+						<a href="<%= dadosReceita["restaurantes"][rest][1] %>"  target="_blank">Link do pedido</a> -
+						<a href="<%= dadosReceita["restaurantes"][rest][2] %>" target="_blank">Endereço</a>
+					</p>
+					<p>Avaliação média: 
+						<%
+							let count = 0; 
+		 					  nota = parseInt(dadosReceita["restaurantes"][rest][3]);
+		 					  for ( count= 0; count < nota ; count = count + 1) { %>
+		 					  	<i class="fas fa-star"></i>
+		 					 	<% } %>
+		 					 	<% for ( ; count < 5 ; count = count + 1) { %>
+		 					 		<i class="far fa-star"></i>
+		 					 	<% } %>
+					</p>
+				</div>
+			</div>
+		<% } %>
+	</div>
+	
+	<input type='submit' value='Upload!'>
+</form>
+
+<style>
+	.text_area {
+		resize: none;
+	}
+</style>
+
+
+<%- contentFor('script') %>
+setCookie("ultimaReceita", <%= recipe_id %>, 10);
+	console.log("opa");
+
+	function get_form_id( id ) {
+		return "form_"+id;
+	}
+
+	function get_element_id( id ){
+		return id.substring(5, id.length);
+	}
+
+	function fechar_inputs() {
+		var inputs = document.getElementsByClassName("form_field");
+		var original_field = "";
+		console.log("inputs = "+inputs.length);
+		for (var i = 0; i < inputs.length; i++) {
+	    original_field = get_element_id(inputs[i].id);
+
+	    document.getElementById(original_field).innerHTML = inputs[i].innerHTML;;
+	    
+	    inputs[i].style.display = "none";
+
+		}
+	};
+
+	function abrir_input( id ){
+		document.getElementById(id).style.display = "block";
+		document.getElementById(get_element_id(id)).style.display = "none";
+		document.getElementById(id).focus();
+	};
+
+	function abrir_campo( id ){
+		var elemento = get_form_id(id);
+		document.getElementById(id).style.display = "block";
+		document.getElementById(id).innerHTML = document.getElementById(elemento).value;
+		document.getElementById(elemento).style.display = "none";
+
+	};
+
+	function atualizar_campo( id, tipo ){
+		var elemento = get_form_id(id);
+		document.getElementById(id).style.display = "block";
+		valor = document.getElementById(elemento).value;
+		if(tipo == "p"){
+			msg = valor+" pessoa";
+		} else if(tipo == "m") {
+			msg = valor+" minuto";
+		}
+		if(parseInt(valor) > 1){
+			msg += 's';
+		}
+		document.getElementById(id).innerHTML = msg;
+		document.getElementById(elemento).style.display = "none";
+	};
+
+	function atualizar_nota( id ){
+		abrir_campo(id);
+	}
+
+	function atualizar_lista(id){
+		var elemento = get_form_id(id);
+		var linhas = document.getElementById(elemento).value.split("\n");
+		console.log(linhas[1]);
+		document.getElementById(id).style.display = "block";
+		document.getElementById(elemento).style.display = "none";
+
+		//inserindo lista
+		texto = "";
+
+		for(var count = 0; count<linhas.length; count++){
+			texto += "<li>"+linhas[count]+"</li>";
+		}
+
+		document.getElementById(id).innerHTML = texto;
+	}
+
+	document.getElementById('form_nome_receita').focus();
+
+
