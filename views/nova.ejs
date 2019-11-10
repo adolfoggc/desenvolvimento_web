@@ -34,20 +34,11 @@
 				<%= dadosReceita["descricao"] %>
 			</textarea>
 			<div id="dados_info">
-				<p>Cadastrado por:</p>
 				<div class="flex_r">
-						Fonte: 
-						<a id="receita_original" onclick="abrir_input('form_receita_original')">
-						<% if (dadosReceita["receita_original"] > '' ){ %>
-							Receita Original
-	 			 		<% } else { %>
-	 			 			Nova Receita
-	 			 		<% } %>
-	 			 		</a>
-	 			 		<input name="receita_original" id="form_receita_original" onfocusout="abrir_campo('receita_original')" value="<%= dadosReceita["receita_original"] %>" style="display: none">
-						</input>
-					</p>
-					<img class="flex_1 avatar" id="imagem_user" src="/receitas/<%= recipe_id %>/avatar.jpeg">
+					<div style="padding-top:5px;">Fonte:</div>
+					<br>
+ 			 		<input name="receita_original" id="form_receita_original" onfocusout="abrir_campo('receita_original')" placeholder="Deixe em branco caso sua receita seja original ou deixe o link da página de onde a receita foi retirada" style="width: 100%;">
+ 
 				</div>
 			</div>
 		</div>
@@ -60,10 +51,7 @@
 		<div class="flex_1 flex_c texto_c card" id="categoria">
 			<i class="fas fa-pizza-slice fa-3x"></i>
 			<p>Categoria:</p>
-			<p id="categoria_receita" onclick="abrir_input('form_categoria_receita')"><%= dadosReceita["receita_categoria"] %></p>
-
-			
-			<select name="categoria_receita" id="form_categoria_receita" onfocusout="abrir_campo('categoria_receita')" value="<%= dadosReceita["receita_categoria"] %>" style="display: none">
+			<select name="categoria_receita" id="form_categoria_receita"  value="<%= dadosReceita["receita_categoria"] %>">
 			  <option value="Bebidas">Bebidas</option>
 			  <option value="Carnes">Carnes</option>
 			  <option value="Massas">Massas</option>
@@ -75,31 +63,14 @@
 		</div>
 		<div class="flex_1 flex_c texto_c card" id="tempo_preparo">
 			<i class="far fa-clock fa-3x"></i>
-			<p>Tempo de Preparo:</p>
-			<p id="tempo_receita" onclick="abrir_input('form_tempo_receita')">
-				<%= dadosReceita["receita_tempo"] %>
-				<% if( parseInt( dadosReceita["receita_tempo"] ) == 1){ %>
-					<%= " minuto" %>
-				<% } else { %>
-					<%= " minutos" %>
-				<% } %>	
-			</p>
-
-			<input type="number" min="1" name="tempo_receita" id="form_tempo_receita" onfocusout="atualizar_campo('tempo_receita','m')" value="<%= dadosReceita["receita_quantidade"] %>" style="display: none">
+			<p>Preparo em minutos:</p>
+			<input type="number" min="1" name="tempo_receita" id="form_tempo_receita" value="<%= dadosReceita["receita_quantidade"] %>">
 			</input>
 		</div>
 		<div class="flex_1 flex_c texto_c card" id="porcoes">
 			<i class="fas fa-users fa-3x expandida flex_1 sm"></i>
-			<p>Rendimento:</p>
-			<p id="quantidade_receita" onclick="abrir_input('form_quantidade_receita')">
-				<%= dadosReceita["receita_quantidade"] %>
-				<% if( parseInt( dadosReceita["receita_quantidade"] ) == 1){ %>
-					<%= " pessoa" %>
-				<% } else { %>
-					<%= " pessoas" %>
-				<% } %>		
-			</p>
-			<input type="number" min="1" name="quantidade_receita" id="form_quantidade_receita" onfocusout="atualizar_campo('quantidade_receita','p')" value="<%= dadosReceita["receita_quantidade"] %>" style="display: none">
+			<p>Rendimento por pessoa:</p>
+			<input type="number" min="1" name="quantidade_receita" id="form_quantidade_receita" value="<%= dadosReceita["receita_quantidade"] %>">
 			</input>
 		</div>
 	</div>
@@ -264,15 +235,10 @@ setCookie("ultimaReceita", <%= recipe_id %>, 10);
         const fsize = fi.files.item(i).size; 
         const file = Math.round((fsize / 1024)); 
         // The size of the file. 
-        if (file >= 4096) { 
+        if (file >= 500) { 
           alert( 
-              "File too Big, please select a file less than 4mb"); 
-        } else if (file < 2048) { 
-          alert( 
-              "File too small, please select a file greater than 2mb"); 
-        } else { 
-          document.getElementById('size').innerHTML = '<b>'
-            + file + '</b> KB'; 
+              "Por favor, imagem de no máximo 500kb");
+          document.getElementById('imagem').value = null;
         } 
       } 
     } 
