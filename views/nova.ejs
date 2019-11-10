@@ -1,6 +1,6 @@
 
 <%- contentFor('secao') %>
-<form action='create' method='post' encType="multipart/form-data">
+<form action='create' method='post' onsubmit="return validar_form()" encType="multipart/form-data">
 	<div class="container_cabecalho">
 		<h1 id="nome_receita">
 			Nova Receita
@@ -11,15 +11,20 @@
 			<%= dadosReceita["nome_receita"] %>
 		</h1>
 
-		<input name="nome_receita" id="form_nome_receita" onfocusout="abrir_campo('nome_receita')" value="<%= dadosReceita["nome_receita"] %>" style="margin: auto">
+		<input required name="nome_receita" id="form_nome_receita" onfocusout="abrir_campo('nome_receita')" value="<%= dadosReceita["nome_receita"] %>" style="margin: auto">
 		</input>
 	</div>
-	<div id="frame_imagem">
-		<img id="imagem_receita" class="imagem" src="/receitas/<%= recipe_id %>/receita.jpg" alt="Imagem da receita">
-	</div>
 	<!-- UPLOAD DE IMAGEM -->
-	<input type="file" name="file" style="margin: auto">
-	
+	<div id="informacoes" class="expandida_grid_4">	
+		<div class="card">
+
+		Insira a imagem da receita. 
+		<br><br>
+		Ela deve ser de no máximo 500kb e preferencialmente ter dimensões proporcionais a 16 x 9<br><br>
+
+		<input required type="file" name="file" id="imagem" style="margin: auto" onchange="validar_imagem()">
+		</div>
+	</div>
 	<div id="informacoes" class="expandida_grid_4">	
 		<div class="card">
 			<p class="texto_j" id="descricao" onclick="abrir_input('form_descricao');">
@@ -245,4 +250,30 @@ setCookie("ultimaReceita", <%= recipe_id %>, 10);
 
 	document.getElementById('form_nome_receita').focus();
 
+	function validar_form(){
 
+	}
+
+	function validar_imagem() { 
+    const fi = document.getElementById('imagem'); 
+    // Check if any file is selected. 
+    if (fi.files.length > 0) { 
+    	//for (const i = 0; i <= fi.files.length - 1; i++) { 
+      for (var i = 0; i <= fi.files.length - 1; i++) { 
+
+        const fsize = fi.files.item(i).size; 
+        const file = Math.round((fsize / 1024)); 
+        // The size of the file. 
+        if (file >= 4096) { 
+          alert( 
+              "File too Big, please select a file less than 4mb"); 
+        } else if (file < 2048) { 
+          alert( 
+              "File too small, please select a file greater than 2mb"); 
+        } else { 
+          document.getElementById('size').innerHTML = '<b>'
+            + file + '</b> KB'; 
+        } 
+      } 
+    } 
+	} 
