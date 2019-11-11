@@ -174,6 +174,22 @@ function contar_pastas(fs,direct){
 	});
 }
 
+function apagar_arquivos(caminho) {
+	const deleteFolderRecursive = function(caminho) {
+  if (fs.existsSync(caminho)) {
+    fs.readdirSync(caminho).forEach((file, index) => {
+      const curPath = path.join(caminho, file);
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};	
+}
+
 //coisas sérias
 
 app.get('/', (req, res) => {
@@ -438,7 +454,7 @@ app.get('/apagar/:rec', function(req,res) {
 	console.log("==============================")
 	if(req.cookies.ultimaReceita == req.params.rec){
 		console.log("uepa!");
-		res.clearCookie("ultimaReceita");
+		//res.clearCookie("ultimaReceita");
 	}
 
 	//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
