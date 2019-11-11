@@ -29,6 +29,8 @@ app.use(expressLayouts)
  */
 app.use(cookieParser());
 
+//contador de arquivos
+
 var maxSize = 500*1024; // 500kb
 
 const storage = multer.diskStorage({
@@ -40,6 +42,33 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, 'receita.jpg');
     }
+});
+
+const atualizar_arquivos = fs => new Promisse((resolve, reject) => {
+	var pasta_receitas = path.join(__dirname+'/public/receitas');
+	var proxima_id_receita = 0;
+	fs.readdir(pasta_receitas, (err, files) => {
+		counted_recipes = files.length;
+		
+		//receberá ids válidas de receitas
+		var receitas = new Array();
+		// receitas = contar_pastas(fs, __dirname+'/public/receitas');
+
+		files.forEach(file => {
+			var filename = path.basename(file, '.json');
+    	if(parseInt(filename) > proxima_id_receita){
+
+    		proxima_id_receita = parseInt(filename);
+    	}
+  	});
+  	proxima_id_receita++;
+  	console.log("==============================");
+  	console.log("Receitas Ativas: "+counted_recipes);
+  	console.log("Receitas Inativas: "+"0");
+  	console.log("Próxima Id de Receita: "+proxima_id_receita);
+  	console.log("==============================");
+  	resolve(proxima_id_receita);
+	});
 });
 
 //uploader
@@ -104,6 +133,16 @@ function checagem_cookie(cookie, nome_cookie, valor_padrao){
 	}
 	return valor;
 }
+
+function copia_para_outra_pasta( arquivo, antigo_endereco,novo_endereco, fs, extensao ){
+	fs.copyFile(antigo_endereco+"/"+arquivo+'.'+extensao, novo_endereco+"/"+arquivo+'.'+extensao, (err) => {
+	  if (err){ 
+	  	throw err;
+	  	console.log(err);
+	  }
+	});	
+}
+
 
 function backup_arquivo( arquivo, endereco, fs, extensao ){
 	fs.copyFile(endereco+"/"+arquivo+'.'+extensao, endereco+"/backup_"+arquivo+'.'+extensao, (err) => {
@@ -171,18 +210,14 @@ app.get('/', (req, res) => {
 
 		//modelo anterior
 		fs.readFile(diret, function (err, inside_data) {
-		if (err) {
-			//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
-			return console.error(err);
-		}  
-		dadosReceitas = require(diret);
-		step = undefined;
-		res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});
-		
-	});
-
-
-
+			if (err) {
+				//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+				return console.error(err);
+			}  
+			dadosReceitas = require(diret);
+			step = undefined;
+			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});		
+		});
 	}); //fim readdir
 });	
 
@@ -286,8 +321,89 @@ app.post('/create', function(req,res) {
 	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 	step = 2;
-	res.redirect('/');
-	
+	//console.log(proxima_id_receita);
+	//criando nova pasta
+	var pasta_receitas = path.join(__dirname+'/public/receitas');
+	var proxima_id_receita = 0;
+	//obter próxima id	
+	fs.readdir(pasta_receitas, (err, files) => {
+		files.forEach(file => {
+			var filename = path.basename(file, '.json');
+    	if(parseInt(filename) > proxima_id_receita){
+
+    		proxima_id_receita = parseInt(filename);
+    	}
+  	});
+  	proxima_id_receita++;
+  	const nova_id = proxima_id_receita;
+  	pasta_receitas = path.join(__dirname+'/public/receitas/'+nova_id);
+
+		if (!fs.existsSync(pasta_receitas)){
+	  	fs.mkdirSync(pasta_receitas);
+		}
+		//trabalhando o upload
+		
+		//backup sem arquivo original?
+		//backup_arquivo("receita",direct,fs, "jpg");
+		req.params.rec = nova_id;
+	  upload(req, res, function (err) {
+	    if (err) {
+	        res.send('<h1>Tururu...</h1>');
+	        //rollback("receita",direct,fs, "jpg");
+	        return console.log(err);
+	    }
+	   	var dadosReceita = {}; //novo json	
+			
+			//console.log(typeof(dadosReceita));
+			dadosReceita["nome_receita"] = req.body.nome_receita;
+	    dadosReceita["descricao"] = req.body.descricao.replace('\t','');
+	    dadosReceita["preparo"] = req.body.preparo.replace('\t','');
+	    dadosReceita["ingredientes"] = req.body.ingredientes.replace('\t','');
+	    dadosReceita["receita_categoria"] = req.body.categoria_receita;
+	    dadosReceita["receita_tempo"] = req.body.tempo_receita;
+	    dadosReceita["receita_quantidade"] = req.body.quantidade_receita;
+	    dadosReceita["receita_original"] = req.body.receita_original;
+			
+	    //criando arquivo
+	    fs.writeFile(pasta_receitas + '/receita.json', JSON.stringify(dadosReceita), function (err, data){
+	      if (err) {
+	        console.log('Erro gravando atualizações');
+	        return console.error(err);
+	      }
+	      //atualizar arquivo inicial
+	      let caminho_indice = path.join(__dirname + '/public/data/recipe_names.json');
+	      fs.readFile(caminho_indice, function (err, data) {
+					if (err) {
+						res.send('Dados inexistentes ou incompletos para arquivo de índice');
+						return console.error(err);
+					}
+					//capturando arquivo anterior
+	    		arquivo_indice = require(caminho_indice);
+	    		//inserindo novos campos
+	    		nome_receita = dadosReceita["nome_receita"];
+	    		
+	    		console.log("=================================================");
+	    		console.log("Dados a inserir: "+nome_receita+ " e "+5);
+	    		console.log("=================================================");
+	    		arquivo_indice = JSON.stringify(arquivo_indice);
+	    		arquivo_indice.replace("}", ",");
+	    		arquivo_indice += '"'+nova_id+'":["'+nome_receita+'","'+5+'"]}';
+	    		//atualizando arquivo de índice
+	    		console.log("=================================================");
+	    		console.log(arquivo_indice);
+	    		fs.writeFile(caminho_indice, arquivo_indice, function (err, data){
+		        if (err) {
+		          console.log('Erro gravando atualizações');
+		          return console.error(err);
+		        }
+		        //deu bom
+						res.redirect('/');
+					});	
+	      });
+			}); 
+	  });//fim upload
+  });
+	///
 });//fim create
 
 app.get('/nova_receita', function(req,res) {
@@ -299,7 +415,38 @@ app.get('/nova_receita', function(req,res) {
 	recipe_id = 1;
 	res.render('nova', {style, size, step, dadosReceita, recipe_id});
 });//fim new
+
+
+app.get('/apagar/:rec', function(req,res) {
+	var pasta_receitas = path.join(__dirname+'/public/receitas/'+req.params.rec);
+	var pasta_lixeira = path.join(__dirname+'/public/lixeira/'+req.params.rec);
+
+	//criar pasta na lixeira
+	if (!fs.existsSync(pasta_lixeira)){
+	  fs.mkdirSync(pasta_lixeira);
+	}
+
+	//copiando arquivos
+	copia_para_outra_pasta( "avatar", pasta_receitas, pasta_lixeira, fs, "jpeg" )
+	copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "jpg" )
+	copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "json" )
+	
+	//checando cookie
+	console.log("==============================")
+	console.log(req.cookies.ultimaReceita)
+	console.log(req.params.rec)
+	console.log("==============================")
+	if(req.cookies.ultimaReceita == req.params.rec){
+		console.log("uepa!");
+		res.clearCookie("ultimaReceita");
+	}
+
+	//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
+	res.redirect('/');
+});
 //FIM ATIVIDADE 7
+
+
 
 
 app.get('/contato', (req, res) => {
@@ -340,7 +487,6 @@ app.post('/receita/edit/update/:rec', function(req, res) {
         res.send('<h1>Tururu...</h1>');
         rollback("receita",direct,fs, "jpg");
         return console.log(err);
-
     }
    
     fs.readFile(direct+'/receita.json', function (err, data) {
@@ -391,5 +537,5 @@ app.post('/receita/edit/update/:rec', function(req, res) {
 
 
 app.listen(8080, function () {
-  console.log('Example app listening on port 8080!')
+  console.log('Servidor iniciado na porta 8080!')
 })
