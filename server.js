@@ -261,6 +261,11 @@ app.get('/', (req, res) => {
 				return console.error(err);
 			}  
 			dadosReceitas = require(diret);
+			console.log("===============================");
+			console.log(dadosReceitas);
+			console.log("===============================");
+			console.log(counted_recipes);
+			console.log("===============================");
 			step = undefined;
 			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});		
 		});
@@ -400,7 +405,6 @@ app.post('/create', function(req,res) {
 	    }
 	   	var dadosReceita = {}; //novo json	
 			
-			//console.log(typeof(dadosReceita));
 			dadosReceita["nome_receita"] = req.body.nome_receita;
 	    dadosReceita["descricao"] = req.body.descricao.replace('\t','');
 	    dadosReceita["preparo"] = req.body.preparo.replace('\t','');
@@ -431,13 +435,14 @@ app.post('/create', function(req,res) {
 	    		console.log("=================================================");
 	    		console.log("Dados a inserir: "+nome_receita+ " e "+5);
 	    		console.log("=================================================");
-	    		arquivo_indice = JSON.stringify(arquivo_indice);
-	    		arquivo_indice.replace("}", ",");
-	    		arquivo_indice += '"'+nova_id+'":["'+nome_receita+'","'+5+'"]}';
+	    		str = JSON.stringify(arquivo_indice);
+	    		arquivo_indice = str.substring(0,str.length-1);
+	    		arquivo_indice += ',"'+nova_id+'":["'+nome_receita+'","'+5+'"]}';
 	    		//atualizando arquivo de índice
 	    		console.log("=================================================");
 	    		console.log(arquivo_indice);
-	    		fs.writeFile(caminho_indice, arquivo_indice, function (err, data){
+	    		arquivo_indice = JSON.parse(arquivo_indice);
+	    		fs.writeFile(caminho_indice, JSON.stringify(arquivo_indice), function (err, data){
 		        if (err) {
 		          console.log('Erro gravando atualizações');
 		          return console.error(err);
