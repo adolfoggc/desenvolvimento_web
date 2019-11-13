@@ -12,7 +12,7 @@
 		<img id="imagem_receita" class="imagem" src="/receitas/<%= recipe_id %>/receita.jpg" alt="Imagem da receita">
 	</div>
 	<!-- UPLOAD DE IMAGEM -->
-	<input type="file" name="file" style="margin: auto">
+	<input required type="file" name="file" id="imagem" style="margin: auto" onchange="validar_imagem()">
 	
 	<div id="informacoes" class="expandida_grid_4">	
 		<div class="card">
@@ -289,3 +289,22 @@
 	}
 
 	document.getElementById('form_nome_receita').focus();
+
+	function validar_imagem() { 
+    const fi = document.getElementById('imagem'); 
+    // Check if any file is selected. 
+    if (fi.files.length > 0) { 
+    	//for (const i = 0; i <= fi.files.length - 1; i++) { 
+      for (var i = 0; i <= fi.files.length - 1; i++) { 
+
+        const fsize = fi.files.item(i).size; 
+        const file = Math.round((fsize / 1024)); 
+        // The size of the file. 
+        if (file >= 500) { 
+          alert( 
+              "Por favor, imagem de no máximo 500kb");
+          document.getElementById('imagem').value = null;
+        } 
+      } 
+    } 
+	}

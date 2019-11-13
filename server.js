@@ -174,20 +174,50 @@ function contar_pastas(fs,direct){
 	});
 }
 
-function apagar_arquivos(caminho) {
-	const deleteFolderRecursive = function(caminho) {
-  if (fs.existsSync(caminho)) {
-    fs.readdirSync(caminho).forEach((file, index) => {
-      const curPath = path.join(caminho, file);
-      if (fs.lstatSync(curPath).isDirectory()) { // recurse
-        deleteFolderRecursive(curPath);
-      } else { // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    fs.rmdirSync(path);
+//OPCAO
+
+  function cleanEmptyFoldersRecursively(folder) {
+    var fs = require('fs');
+    var path = require('path');
+    console.log(folder);
+    var isDir = fs.statSync(folder).isDirectory();
+    if (!isDir) {
+      return;
+    }
+    var files = fs.readdirSync(folder);
+    if (files.length > 0) {
+      files.forEach(function(file) {
+        var fullPath = path.join(folder, file);
+      	fs.unlinkSync(fullPath);  
+        cleanEmptyFoldersRecursively(fullPath);
+      });
+
+      // re-evaluate files; after deleting subfolder
+      // we may have parent folder empty now
+      files = fs.readdirSync(folder);
+    }
+
+    if (files.length == 0) {
+      console.log("removing: ", folder);
+      fs.rmdirSync(folder);
+      return;
+    }
   }
-};	
+
+function apagar_arquivos(caminho,fs, arquivos) {
+	let apagados = 0;
+	for(var count = 0; count < arquivos.length; count++){
+		arquivo = caminho+"/"+arquivos[count];
+		console.log(arquivo);
+		try {
+			fs.unlinkSync(arquivo);
+			apagados++;
+		} catch(err){
+			//segue o baile
+			//console.log(err)
+		}		
+	}
+	console.log(apagados+" arquivos apagados");
 }
 
 //coisas sérias
@@ -448,14 +478,14 @@ app.get('/apagar/:rec', function(req,res) {
 	copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "json" )
 	
 	//checando cookie
-	console.log("==============================")
-	console.log(req.cookies.ultimaReceita)
-	console.log(req.params.rec)
-	console.log("==============================")
 	if(req.cookies.ultimaReceita == req.params.rec){
 		console.log("uepa!");
-		//res.clearCookie("ultimaReceita");
+		res.clearCookie("ultimaReceita");
 	}
+	let arquivos = ["avatar.jpeg", "receita.jpg", "receita.json", "backup_receita.jpg"];
+	apagar_arquivos(pasta_receitas, fs, arquivos);
+	fs.rmdirSync(pasta_receitas);
+	//cleanEmptyFoldersRecursively(pasta_receitas);
 
 	//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
 	res.redirect('/');
