@@ -27,8 +27,13 @@
 	    </div>	
 	  </div>
 <% } %>
-
+<script>
+	console.log("=================================");
+</script>
 <% for( var count = 0;count< receitas.length; count++) { %>
+	<script>
+		console.log(<%= count %>);
+	</script>
   <% if(receitas[count] != ultimaReceita) { %>
 	  <div class="recipe_display">
 	  	<a href=<%= "receita/"+ receitas[count] %> >

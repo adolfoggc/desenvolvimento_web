@@ -71,6 +71,27 @@ const atualizar_arquivos = fs => new Promisse((resolve, reject) => {
 	});
 });
 
+//promisses?
+/*
+let update_file(caminho_arquivo, dados, res) = new Promise((resolve, reject) => {
+	if(){
+		resolve("Deu bom");
+	} else {
+		reject(Error("Deu ruim"));
+	}
+}); */
+/*
+let update_file = function(caminho_arquivo, dados, res) {
+  return new Promise(function(resolve, reject) {
+    /*stuff using username, password
+    if (  ) {
+      resolve("Stuff worked!");
+    } else {
+      reject(Error("It broke"));
+    }
+  });
+} */
+
 //uploader
 const upload = multer({
     storage : storage,
@@ -135,12 +156,15 @@ function checagem_cookie(cookie, nome_cookie, valor_padrao){
 }
 
 function copia_para_outra_pasta( arquivo, antigo_endereco,novo_endereco, fs, extensao ){
-	fs.copyFile(antigo_endereco+"/"+arquivo+'.'+extensao, novo_endereco+"/"+arquivo+'.'+extensao, (err) => {
-	  if (err){ 
-	  	throw err;
-	  	console.log(err);
-	  }
-	});	
+	try {
+		fs.copyFile(antigo_endereco+"/"+arquivo+'.'+extensao, novo_endereco+"/"+arquivo+'.'+extensao, (err) => {
+		  if (err){ 
+		  	//console.log(err);
+		  }
+		});	
+	} catch(error){
+
+	}
 }
 
 
@@ -253,18 +277,22 @@ app.get('/', (req, res) => {
 		diret = path.join(__dirname+'/public/data/recipe_names.json');
 		nomesReceitas = new Array();
 		
+		
 
 		//modelo anterior
-		fs.readFile(diret, function (err, inside_data) {
+		fs.readFile(diret, function (err, dadosReceitas) {
 			if (err) {
 				//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
 				return console.error(err);
 			}  
-			dadosReceitas = require(diret);
+			//dadosReceitas = require(diret);
+			//dadosReceitas = inside_data;
+			dadosReceitas = JSON.parse(dadosReceitas);
 			console.log("===============================");
 			console.log(dadosReceitas);
 			console.log("===============================");
-			console.log(counted_recipes);
+			console.log("Receitas em Pastas: "+counted_recipes);
+			console.log("Receitas no json: "+Object.keys(dadosReceitas).length);
 			console.log("===============================");
 			step = undefined;
 			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});		
@@ -446,9 +474,11 @@ app.post('/create', function(req,res) {
 		        if (err) {
 		          console.log('Erro gravando atualizações');
 		          return console.error(err);
-		        }
-		        //deu bom
-						res.redirect('/');
+		        }else {
+			        console.log("gravação completa!")
+			        //deu bom
+							res.redirect('/');
+						}
 					});	
 	      });
 			}); 
