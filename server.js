@@ -319,7 +319,12 @@ app.get('/', (req, res) => {
 			console.log("Receitas no json: "+Object.keys(dadosReceitas).length);
 			console.log("===============================");
 			step = undefined;
-			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas});		
+			logado = false;
+			if(req.session.loggedin){
+				logado = true;
+			}
+
+			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas, logado});		
 		});
 	}); //fim readdir
 });	
@@ -572,6 +577,99 @@ app.get('/recuperar', (req, res) => {
 	var step = undefined
 	res.render('recuperar', {style, step, size})
 })
+
+app.get('/novo_chef', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	res.render('novo_chef', {style, step, size})
+})
+
+app.post('/auth', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	
+	var username = req.body.email
+  var password = sha512(req.body.senha, secret)
+
+  if (username && password) {
+    // Authenticate
+    console.log(__dirname + '/public/users.json'	)
+    var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+    var user = users.find((item) => {
+      return (item.username == username && item.password == password)
+    })
+
+    // Login
+    if (user != undefined) {
+        req.session.loggedin = true
+        req.session.username = username
+        res.redirect('/')
+    } else {
+        res.send('Incorrect username/password.')
+    }
+    res.end()
+  } else {
+    res.send('Please enter username and password.')
+    res.end()
+  }
+	res.render('novo_chef', {style, step, size})
+})
+
+app.post('/novo_chef', (req, res) => {
+  var username = req.body.email
+  var password = sha512(req.body.senha, secret)
+
+  console.log(req.body);
+
+  if (username && password) {
+    // Authenticate
+    var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
+    var user = users.find((item) => {
+//  return (item.username == username && item.password == password)
+    return (item.username == username)
+  })
+
+  // Login
+  if (user == undefined) { // USUÁRIO NAO EXISTE
+
+    novousuario = {
+        "username" : username,
+        "password" : password 
+    };
+
+    if (req.body.adm == 'on') novousuario.adm = 1;
+
+      users[users.length] = novousuario;
+      console.log("Novo usuario:");
+      console.log(novousuario);
+
+      /*
+      console.log("Numero de usuarios:");
+      console.log(users.length);
+      console.log(users);
+      */
+
+      data = JSON.stringify(users);
+      fs.writeFileSync(__dirname + '/public/users.json',data);
+      req.session.loggedin = true
+      req.session.username = username
+      res.redirect('/')
+      /*
+      */
+
+  	} else {
+      res.send('User already exists!')
+  	}
+    res.end()
+  } else {
+    res.send('Please enter username and password.')
+    res.end()
+  }
+})
+
 /*
 app.get('/novo_chef', (req, res) => {
 	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")

@@ -33,7 +33,13 @@
               <a class="botao_fake" href="/contato">Contato</a>
             </li>
             <li>
-              <a class="botao_fake" href="/login">Logar</a>
+              <a class="botao_fake" href="/login">
+                <% if(logado == true){ %>
+                  Sair
+                <% }else{ %>
+                  Logar
+                <% } %>
+              </a>
             </li>
           </div>
         </ul>
