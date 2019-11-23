@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 
 <%- contentFor('secao') %>
 <% if(ultimaReceita != 0) {%>
@@ -21,9 +22,13 @@
 				 	<% } %> 
 				</div><!-- NOTA -->
 				<br><br>
-				<a href=<%= "receita/edit/"+ ultimaReceita %> >Editar</a>
-				<br>
-				<a href=<%= "apagar/"+ ultimaReceita %> onclick="return confirm('Tem certeza que quer apagar esta receita?');">Apagar</a>
+				<% console.log('-----------------') %>
+				<% console.log(logado) %>
+				<% if(logado == true) { %>
+					<a href=<%= "receita/edit/"+ ultimaReceita %> >Editar</a>
+					<br>
+					<a href=<%= "apagar/"+ ultimaReceita %> onclick="return confirm('Tem certeza que quer apagar esta receita?');">Apagar</a>
+				<% } %>
 	    </div>	
 	  </div>
 <% } %>
@@ -55,9 +60,11 @@
 				 	<% } %> 
 				</div><!-- NOTA -->
 	    	<br><br>
-	    	<a href=<%= "receita/edit/"+ receitas[count] %> >Editar</a>
-	    	<br>
-	    	<a href=<%= "apagar/"+ receitas[count] %> onclick="return confirm('Tem certeza que quer apagar esta receita?');">Apagar</a>
+	    	<% if(logado == true) { %>
+		    	<a href=<%= "receita/edit/"+ receitas[count] %> >Editar</a>
+		    	<br>
+		    	<a href=<%= "apagar/"+ receitas[count] %> onclick="return confirm('Tem certeza que quer apagar esta receita?');">Apagar</a>
+	    	<% }%>
 	    </div>	
 	  </div>
   <% } %>

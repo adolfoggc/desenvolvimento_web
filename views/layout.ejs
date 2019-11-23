@@ -23,9 +23,11 @@
             <li>
               <a class="botao_fake" href="/">Receitas</a>
             </li>
-            <li>
-              <a class="botao_fake" href="/nova_receita">Nova Receita</a>
-            </li>
+            <% if(logado == true) { %>
+              <li>
+                <a class="botao_fake" href="/nova_receita">Nova Receita</a>
+              </li>
+            <% }%>
             <li>
               <a class="botao_fake" href="/config">Configurações</a>
             </li>
@@ -33,11 +35,14 @@
               <a class="botao_fake" href="/contato">Contato</a>
             </li>
             <li>
-              <a class="botao_fake" href="/login">
                 <% if(logado == true){ %>
-                  Sair
+                  <a class="botao_fake" href="/logout" onclick="return confirm('Tem certeza que deseja sair?');">
+                    Sair
+                  </a>
                 <% }else{ %>
-                  Logar
+                  <a class="botao_fake" href="/login">
+                    Logar
+                  </a>
                 <% } %>
               </a>
             </li>

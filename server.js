@@ -19,7 +19,7 @@ const crypto = require('crypto');
 const secret = 'A1B120dkOplcm4lH'
 
 var sha512 = (pwd, salt) => {
-	var hash = crypto.createHmac('sha512', salt)
+var hash = crypto.createHmac('sha512', salt)
 	hash.update(pwd);
 	return hash.digest('hex');
 }
@@ -319,10 +319,13 @@ app.get('/', (req, res) => {
 			console.log("Receitas no json: "+Object.keys(dadosReceitas).length);
 			console.log("===============================");
 			step = undefined;
+			//AT8
 			logado = false;
 			if(req.session.loggedin){
 				logado = true;
 			}
+			console.log(req.session.loggedin)
+			//FIM AT8
 
 			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas, logado});		
 		});
@@ -331,54 +334,54 @@ app.get('/', (req, res) => {
 
 ///////////////////////////////////////////
 
-app.get('/cv', function(req,res) {
-// app.post('/cv', function(req,res) {  // Substituir para o caso de usar POST
-	var arr1 = [], arr2 = [];
-	/*
-	* Alternativa de recuperação de dados com o POST 
-	* (nesse caso, os dados do formulário devem ser recuperados no payload do HTTP)
-	* O comentário abaixo deve ser removidos e a linha subsequente comentada
-	* para recuperar o nome no corpo o nome do usuário     
-	*/
-	// var name = req.body.name; // recuperação com POST
-	var name = req.query.name; // recuperação com GET
+// app.get('/cv', function(req,res) {
+// // app.post('/cv', function(req,res) {  // Substituir para o caso de usar POST
+// 	var arr1 = [], arr2 = [];
+// 	/*
+// 	* Alternativa de recuperação de dados com o POST 
+// 	* (nesse caso, os dados do formulário devem ser recuperados no payload do HTTP)
+// 	* O comentário abaixo deve ser removidos e a linha subsequente comentada
+// 	* para recuperar o nome no corpo o nome do usuário     
+// 	*/
+// 	// var name = req.body.name; // recuperação com POST
+// 	var name = req.query.name; // recuperação com GET
 	
-	var diret = path.join(__dirname+'/public/data/'+name);
+// 	var diret = path.join(__dirname+'/public/data/'+name);
 	
-	var dadosCV = 
-	{ 
-	  userName : name,
-	  linesSec1 : [], 
-      	  linesSec2 : []
-	}	
+// 	var dadosCV = 
+// 	{ 
+// 	  userName : name,
+// 	  linesSec1 : [], 
+//       	  linesSec2 : []
+// 	}	
 
-	// Leitura dos dados da 1a secao	// var name = req.params.usu //recuperação com /cv/:usu
+// 	// Leitura dos dados da 1a secao	// var name = req.params.usu //recuperação com /cv/:usu
 
-	fs.readFile(diret+'/s1.txt', 
-	    function (err, data) {
-		if (err) {
-			res.send('erro na leitura do aquivo s1.txt');
-			return console.error(err);
-		}
-		dadosCV.linesSec1 = data.toString().split("\n")
+// 	fs.readFile(diret+'/s1.txt', 
+// 	    function (err, data) {
+// 		if (err) {
+// 			res.send('erro na leitura do aquivo s1.txt');
+// 			return console.error(err);
+// 		}
+// 		dadosCV.linesSec1 = data.toString().split("\n")
 	
-		// Leitura dos dados da 2a secao
-		fs.readFile(diret+'/s2.txt', 
-	    function (err, data) {
-			if (err) {
-				res.send('erro na leitura do aquivo s1.txt');
-				return console.error(err);
-			}
-			dadosCV.linesSec2 = data.toString().split("\n")
+// 		// Leitura dos dados da 2a secao
+// 		fs.readFile(diret+'/s2.txt', 
+// 	    function (err, data) {
+// 			if (err) {
+// 				res.send('erro na leitura do aquivo s1.txt');
+// 				return console.error(err);
+// 			}
+// 			dadosCV.linesSec2 = data.toString().split("\n")
 			
-			// Salva cookie com nome de cv acessado
-			res.cookie('lastCv', name);
+// 			// Salva cookie com nome de cv acessado
+// 			res.cookie('lastCv', name);
 
-			// executa cv.ejs
-			res.render('cv2',dadosCV);
-		});
-	});
-})
+// 			// executa cv.ejs
+// 			res.render('cv2',dadosCV);
+// 		});
+// 	});
+// })
 
 app.get('/receita/:rec', function(req,res) {
 
@@ -398,29 +401,42 @@ app.get('/receita/:rec', function(req,res) {
 		//res.cookie('lastCv', :rec);
 		var recipe_id = req.params.rec;
 		//res.cookie('ultimaReceita', req.params.rec, { maxAge: 9000, httpOnly: true });
-		res.render('recipes', {style, size, dadosReceita, step, recipe_id});
+		logado = false;
+		if(req.session.loggedin){
+			logado = true;
+		}
+		res.render('recipes', {style, size, dadosReceita, step, recipe_id, logado});
 	});
 });
 
 app.get('/receita/edit/:rec', function(req,res) {
-	// Carrega cookies de preferências (cookie, nome, valor padrão)
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
-	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
-	var diret; 
-	diret = path.join(__dirname+'/public/receitas/'+req.params.rec);	
-	fs.readFile(diret+'/receita.json', function (err, data) {
-		if (err) {
-			res.send('Dados inexistentes ou incompletos para '+req.params.rec);
-			return console.error(err);
-		}  
-		dadosReceita = require(diret+'/receita.json');
-		step = 2;
-		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
-		//res.cookie('lastCv', :rec);
-		var recipe_id = req.params.rec;
-		//res.cookie('ultimaReceita', req.params.rec, { maxAge: 9000, httpOnly: true });
-		res.render('edit_recipes', {style, size, dadosReceita, step, recipe_id});
-	});
+	if(req.session.loggedin){
+
+		// Carrega cookies de preferências (cookie, nome, valor padrão)
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+		var diret; 
+		diret = path.join(__dirname+'/public/receitas/'+req.params.rec);	
+		fs.readFile(diret+'/receita.json', function (err, data) {
+			if (err) {
+				res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+				return console.error(err);
+			}  
+			dadosReceita = require(diret+'/receita.json');
+			step = 2;
+			//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
+			//res.cookie('lastCv', :rec);
+			var recipe_id = req.params.rec;
+			logado = false;
+			if(req.session.loggedin){
+				logado = true;
+			}
+			//res.cookie('ultimaReceita', req.params.rec, { maxAge: 9000, httpOnly: true });
+			res.render('edit_recipes', {style, size, dadosReceita, step, recipe_id, logado});
+		});
+	} else {
+		res.redirect('/login')
+	}
 });
 
 
@@ -517,104 +533,139 @@ app.post('/create', function(req,res) {
 });//fim create
 
 app.get('/nova_receita', function(req,res) {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
-	var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
-	step = 2;
+	if(req.session.loggedin) {
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
+		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
+		step = 2;
 
-	var dadosReceita = {"nome_receita":"Digite o Nome da Receita","descricao":"Faça uma apresentação de sua receita","ingredientes":"Liste os ingredientes\nSeparar cada um com um ENTER", "preparo" : "Liste os Passos do preparo\nSeparar cada um com um ENTER","receita":["Massas","10","1"],"receita_original":"Coloque o link de onde veio a receita original","avaliacoes":[["Muito bom!","1","Coxinha","#"]],"restaurantes":[["Toca da Catita","#","#","0"]],"receitas_semelhantes":[["5","Nuggets de Carne de Porco"],["2","Macarronada de Macarrão"],["6","Churrasco do Desejo Canino"]],"op":"Físico Turista","receita_categoria":"Bebidas","receita_tempo":"1","receita_quantidade":"1"}
-	recipe_id = 1;
-	res.render('nova', {style, size, step, dadosReceita, recipe_id});
+		var dadosReceita = {"nome_receita":"Digite o Nome da Receita","descricao":"Faça uma apresentação de sua receita","ingredientes":"Liste os ingredientes\nSeparar cada um com um ENTER", "preparo" : "Liste os Passos do preparo\nSeparar cada um com um ENTER","receita":["Massas","10","1"],"receita_original":"Coloque o link de onde veio a receita original","avaliacoes":[["Muito bom!","1","Coxinha","#"]],"restaurantes":[["Toca da Catita","#","#","0"]],"receitas_semelhantes":[["5","Nuggets de Carne de Porco"],["2","Macarronada de Macarrão"],["6","Churrasco do Desejo Canino"]],"op":"Físico Turista","receita_categoria":"Bebidas","receita_tempo":"1","receita_quantidade":"1"}
+		recipe_id = 1;
+		logado = false;
+		if(req.session.loggedin){
+			logado = true;
+		}
+		res.render('nova', {style, size, step, dadosReceita, recipe_id, logado});
+	} else {
+		res.redirect('/login')
+	}
 });//fim new
 
 
 app.get('/apagar/:rec', function(req,res) {
-	var pasta_receitas = path.join(__dirname+'/public/receitas/'+req.params.rec);
-	var pasta_lixeira = path.join(__dirname+'/public/lixeira/'+req.params.rec);
+	if(req.session.loggedin) {
+		var pasta_receitas = path.join(__dirname+'/public/receitas/'+req.params.rec);
+		var pasta_lixeira = path.join(__dirname+'/public/lixeira/'+req.params.rec);
 
-	//criar pasta na lixeira
-	if (!fs.existsSync(pasta_lixeira)){
-	  fs.mkdirSync(pasta_lixeira);
+		//criar pasta na lixeira
+		if (!fs.existsSync(pasta_lixeira)){
+		  fs.mkdirSync(pasta_lixeira);
+		}
+
+		//copiando arquivos
+		copia_para_outra_pasta( "avatar", pasta_receitas, pasta_lixeira, fs, "jpeg" )
+		copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "jpg" )
+		copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "json" )
+		
+		//checando cookie
+		if(req.cookies.ultimaReceita == req.params.rec){
+			console.log("uepa!");
+			res.clearCookie("ultimaReceita");
+		}
+		let arquivos = ["avatar.jpeg", "receita.jpg", "receita.json", "backup_receita.jpg"];
+		apagar_arquivos(pasta_receitas, fs, arquivos);
+		fs.rmdirSync(pasta_receitas);
+		//cleanEmptyFoldersRecursively(pasta_receitas);
+
+		//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
+		res.redirect('/');
+	} else {
+		res.redirect('/login')
 	}
-
-	//copiando arquivos
-	copia_para_outra_pasta( "avatar", pasta_receitas, pasta_lixeira, fs, "jpeg" )
-	copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "jpg" )
-	copia_para_outra_pasta( "receita", pasta_receitas, pasta_lixeira, fs, "json" )
-	
-	//checando cookie
-	if(req.cookies.ultimaReceita == req.params.rec){
-		console.log("uepa!");
-		res.clearCookie("ultimaReceita");
-	}
-	let arquivos = ["avatar.jpeg", "receita.jpg", "receita.json", "backup_receita.jpg"];
-	apagar_arquivos(pasta_receitas, fs, arquivos);
-	fs.rmdirSync(pasta_receitas);
-	//cleanEmptyFoldersRecursively(pasta_receitas);
-
-	//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "ultimaReceita", 0);
-	res.redirect('/');
 });
 //FIM ATIVIDADE 7
 
 //#AT8
 app.get('/login', (req, res) => {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
-	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
-	var step = undefined
-	res.render('login', {style, step, size})
+	if(req.session.loggedin){
+		res.redirect('/')
+	} else {
+		logado = false;
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+		var step = undefined
+		res.render('login', {style, step, size, logado})
+	}
 })
 
 app.get('/novo_chef', (req, res) => {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
-	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
-	var step = undefined
-	res.render('novo_chef', {style, step, size})
+	if(req.session.loggedin) {
+		res.redirect('/')
+	} else {
+		logado =  false
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+		var step = undefined
+		res.render('novo_chef', {style, step, size, logado})
+	}
 })
 
 app.get('/recuperar', (req, res) => {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
-	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
-	var step = undefined
-	res.render('recuperar', {style, step, size})
+	if(req.session.loggedin) {
+		res.redirect('/')
+	} else {
+		logado = false
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+		var step = undefined
+		
+		res.render('recuperar', {style, step, size, logado})
+	}
 })
-
+/*
 app.get('/novo_chef', (req, res) => {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
-	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
-	var step = undefined
-	res.render('novo_chef', {style, step, size})
-})
+	if(req.session.loggedin){
+		res.redirect('/')
+	} else {
+		logado = false
+		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+		var step = undefined
+		res.render('novo_chef', {style, step, size})
+	}
+}) */
 
-app.post('/auth', (req, res) => {
+app.post('/login', (req, res) => {
+	console.log('Processo de autenticação...')
 	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
 	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
 	var step = undefined
 	
 	var username = req.body.email
-  var password = sha512(req.body.senha, secret)
+  	var password = sha512(req.body.senha, secret)
 
-  if (username && password) {
+	
     // Authenticate
     console.log(__dirname + '/public/users.json'	)
-    var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
-    var user = users.find((item) => {
-      return (item.username == username && item.password == password)
-    })
+	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+	console.log("iniciando busca")
+	
+	var user = users.find((item) => {
+  		return (item.username == username && item.password == password)
+	})
 
     // Login
     if (user != undefined) {
         req.session.loggedin = true
         req.session.username = username
+        console.log("Identificão ok!")
+        console.log('Saudações, '+username)
         res.redirect('/')
     } else {
-        res.send('Incorrect username/password.')
-    }
-    res.end()
-  } else {
-    res.send('Please enter username and password.')
-    res.end()
-  }
-	res.render('novo_chef', {style, step, size})
+    	console.log('Nem te conheço!')
+    	res.redirect('/login')
+	}
+
+	//res.render('novo_chef', {style, step, size})
 })
 
 app.post('/novo_chef', (req, res) => {
@@ -629,8 +680,8 @@ app.post('/novo_chef', (req, res) => {
 
     var user = users.find((item) => {
 //  return (item.username == username && item.password == password)
-    return (item.username == username)
-  })
+    	return (item.username == username)
+  	})
 
   // Login
   if (user == undefined) { // USUÁRIO NAO EXISTE
@@ -670,25 +721,37 @@ app.post('/novo_chef', (req, res) => {
   }
 })
 
-/*
-app.get('/novo_chef', (req, res) => {
-	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
-	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
-	var step = undefined
-	res.render('novo_chef', {style, step, size})
-}) */
+
+app.get('/logout', (req, res) => {
+	// var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	// var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	// var step = undefined
+	console.log('Adios, amigo!')
+	req.session.username = undefined
+	req.session.loggedin = undefined
+
+	res.redirect('/')
+}) 
 
 //FIM #AT8
 
 
 app.get('/contato', (req, res) => {
+	logado = false
+	if(req.session.loggedin){
+		logado = true
+	}
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 		step = undefined;
-    res.render('contato', {style, size, step})
+    res.render('contato', {style, size, step, logado})
 })
 
 app.get('/config', (req, res) => {
+	logado = false
+	if(req.session.loggedin){
+		logado = true
+	}
 	// Carrega cookie
 	var style = req.cookies.style;
 	var size = req.cookies.size;
@@ -706,7 +769,7 @@ app.get('/config', (req, res) => {
 		size = 2;
 	}
 
-  res.render('config', {style, size})
+  res.render('config', {style, size, logado})
 });
 
 //EDIT
