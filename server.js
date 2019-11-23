@@ -11,12 +11,36 @@ const expressLayouts = require('express-ejs-layouts');
 const app = express() 
 const fs = require("fs");
 const path = require('path');
-
 const multer = require('multer');
 
+//#AT8
+const session = require('express-session')
+const crypto = require('crypto');
+const secret = 'A1B120dkOplcm4lH'
+
+var sha512 = (pwd, salt) => {
+	var hash = crypto.createHmac('sha512', salt)
+	hash.update(pwd);
+	return hash.digest('hex');
+}
+
+//FIM #AT8
+
+
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
+
+// #AT8
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
+
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+
+//FIM #AT8
 
 /*
  * Configuracap do uso do express-ejs-layouts na nossa aplicação
