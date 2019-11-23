@@ -551,14 +551,43 @@ app.get('/apagar/:rec', function(req,res) {
 });
 //FIM ATIVIDADE 7
 
+//#AT8
+app.get('/login', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	res.render('login', {style, step, size})
+})
 
+app.get('/novo_chef', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	res.render('novo_chef', {style, step, size})
+})
+
+app.get('/recuperar', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	res.render('recuperar', {style, step, size})
+})
+/*
+app.get('/novo_chef', (req, res) => {
+	var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
+	var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
+	var step = undefined
+	res.render('novo_chef', {style, step, size})
+}) */
+
+//FIM #AT8
 
 
 app.get('/contato', (req, res) => {
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 		step = undefined;
-    res.render('contato', {style, size, style, size, step})
+    res.render('contato', {style, size, step})
 })
 
 app.get('/config', (req, res) => {

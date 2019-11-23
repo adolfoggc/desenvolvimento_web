@@ -1,0 +1,61 @@
+<%- contentFor('secao') %>
+	<form style="width: 50%; text-align: center; margin: auto;" action="/auth" method="POST">
+  	<img class="mb-4" src="/imagens/logo/logo_140.png" alt="" width="140px" height="140px">
+    
+    <h1 class="h3 mb-3 font-weight-normal">Faça login</h1>
+    
+    <label for="inputEmail" class="sr-only">Endereço de email</label>
+    
+    <input type="email" id="inputEmail" class="form-control" placeholder="Seu email" required autofocus name="email">
+      
+    <label for="inputPassword" class="sr-only">Senha</label>
+    
+    <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required name="senha">
+    
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="remember-me"> Lembrar de mim
+      </label>
+    </div>
+    <div class="checkbox">
+    	<a href="/novo_chef">
+    		Deseja se cadastrar?
+    	</a>
+    </div>
+    
+    <div class="checkbox">
+    	<a href="/recuperar">
+    		Esqueceu sua senha?
+    	</a>
+    </div>
+
+    <button class="btn" type="submit">
+    	Login
+    </button>
+  </form>
+<style>
+	input {
+		line-height: 2em;
+		font-height: 2em;
+	}
+
+	img {
+		margin: auto;
+		display: block;
+	}
+
+	form {
+		text-align: center;
+	}
+
+	.checkbox {
+		display: block;
+		margin: .5em 0;
+	}
+
+	.btn {
+		margin: 1em 0;
+	}
+</style>
+
+<%- contentFor('script') %>
