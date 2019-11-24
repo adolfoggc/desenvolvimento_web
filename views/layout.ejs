@@ -51,6 +51,11 @@
       </div>
     </nav>
     <div class="container">
+      <% if(valid == 0){%>
+        <div class="alert">
+          Você está logado! No entando, sua conta não foi validada!
+        </div>
+      <% } %>
       <%- secao %>
     </div>
     <script src="https://kit.fontawesome.com/2ae28d83d1.js" crossorigin="anonymous"></script>
@@ -107,6 +112,8 @@
       set_size(<%- size %>);
 
       <%- script %>
+
+      
 
     </script>
   </body>

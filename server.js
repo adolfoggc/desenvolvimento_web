@@ -95,6 +95,15 @@ const atualizar_arquivos = fs => new Promisse((resolve, reject) => {
 	});
 });
 
+function logged_data(req){
+	console.log("========================")
+	console.log("Dados do login")
+	console.log("Email: "+req.session.username)
+	console.log("Adm: "+req.session.adm)
+	console.log("Valid: "+req.session.valid)
+	console.log("========================")
+}
+
 //promisses?
 /*
 let update_file(caminho_arquivo, dados, res) = new Promise((resolve, reject) => {
@@ -324,10 +333,13 @@ app.get('/', (req, res) => {
 			if(req.session.loggedin){
 				logado = true;
 			}
-			console.log(req.session.loggedin)
+			adm = req.session.adm
+			valid = req.session.valid
+			logged_data(req)
+			
 			//FIM AT8
 
-			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas, logado});		
+			res.render('index', { style, size, counted_recipes, ultimaReceita, receitas, step, dadosReceitas, logado, adm, valid});		
 		});
 	}); //fim readdir
 });	
@@ -601,7 +613,7 @@ app.get('/novo_chef', (req, res) => {
 	if(req.session.loggedin) {
 		res.redirect('/')
 	} else {
-		logado =  false
+		logado = false
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
 		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
 		var step = undefined
@@ -621,18 +633,19 @@ app.get('/recuperar', (req, res) => {
 		res.render('recuperar', {style, step, size, logado})
 	}
 })
-/*
-app.get('/novo_chef', (req, res) => {
-	if(req.session.loggedin){
-		res.redirect('/')
-	} else {
-		logado = false
+
+app.get('/admin', (req, res) => {
+	if(req.session.loggedin && req.session.adm == 1){
+		logado = true
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
 		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
 		var step = undefined
-		res.render('novo_chef', {style, step, size})
+		adm = req.session.adm
+		res.render('admin', {style, step, size,	logado, adm})
+	} else {
+		res.redirect('/')
 	}
-}) */
+})
 
 app.post('/login', (req, res) => {
 	console.log('Processo de autenticação...')
@@ -657,15 +670,14 @@ app.post('/login', (req, res) => {
     if (user != undefined) {
         req.session.loggedin = true
         req.session.username = username
-        console.log("Identificão ok!")
+        req.session.adm = user.adm
+        req.session.valid = user.valid
         console.log('Saudações, '+username)
         res.redirect('/')
     } else {
     	console.log('Nem te conheço!')
     	res.redirect('/login')
 	}
-
-	//res.render('novo_chef', {style, step, size})
 })
 
 app.post('/novo_chef', (req, res) => {
@@ -676,8 +688,12 @@ app.post('/novo_chef', (req, res) => {
 
   if (username && password) {
     // Authenticate
-    var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
-
+    var users = ''
+ //    if(req.body.adm == 'on'){
+	//     users = JSON.parse(fs.readFileSync(__dirname + '/public/admins.json'))
+	// } else {
+		users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+	// }
     var user = users.find((item) => {
 //  return (item.username == username && item.password == password)
     	return (item.username == username)
@@ -691,7 +707,13 @@ app.post('/novo_chef', (req, res) => {
         "password" : password 
     };
 
-    if (req.body.adm == 'on') novousuario.adm = 1;
+    if (req.body.adm == 'on'){
+    	novousuario.adm = 1;
+    	novousuario.valid = 1;
+    } else {
+    	novousuario.adm = 0;
+    	novousuario.valid = 0;
+    }
 
       users[users.length] = novousuario;
       console.log("Novo usuario:");
@@ -704,9 +726,16 @@ app.post('/novo_chef', (req, res) => {
       */
 
       data = JSON.stringify(users);
-      fs.writeFileSync(__dirname + '/public/users.json',data);
+  //   	if(req.body.adm == 'on'){
+		//     fs.writeFileSync(__dirname + '/public/admins.json', data)
+		// } else {
+			fs.writeFileSync(__dirname + '/public/users.json', data)
+		// } 
+      //fs.writeFileSync(__dirname + '/public/users.json',data);
       req.session.loggedin = true
       req.session.username = username
+      req.session.adm = novousuario.adm
+      req.session.valid = novousuario.valid
       res.redirect('/')
       /*
       */
@@ -729,6 +758,8 @@ app.get('/logout', (req, res) => {
 	console.log('Adios, amigo!')
 	req.session.username = undefined
 	req.session.loggedin = undefined
+	req.session.adm = undefined
+	req.session.valid = undefined
 
 	res.redirect('/')
 }) 
