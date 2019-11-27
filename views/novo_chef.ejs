@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%- contentFor('secao') %>
 	<form style="width: 50%; text-align: center; margin: auto;" action="/novo_chef" method="POST">
   	<img class="mb-4" src="/imagens/logo/logo_140.png" alt="" width="140px" height="140px">
@@ -12,12 +13,6 @@
     
     <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required name="senha">
     
-    <div class="checkbox">
-	    <label for="adm">
-				<input type="checkbox" name="adm" placeholder="Adm">
-	    	Você é admin? 
-	    </label
-		</div>
     <div class="checkbox">
     	<a href="/recuperar">
     		Esqueceu sua senha?

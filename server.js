@@ -85,6 +85,7 @@ const atualizar_arquivos = fs => new Promisse((resolve, reject) => {
     		proxima_id_receita = parseInt(filename);
     	}
   	});
+
   	proxima_id_receita++;
   	console.log("==============================");
   	console.log("Receitas Ativas: "+counted_recipes);
@@ -308,7 +309,7 @@ app.get('/', (req, res) => {
 		
 
 		diret = path.join(__dirname+'/public/data/recipe_names.json');
-		nomesReceitas = new Array();
+		//nomesReceitas = new Array();
 		
 		
 
@@ -317,7 +318,7 @@ app.get('/', (req, res) => {
 			if (err) {
 				//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
 				return console.error(err);
-			}  
+			}
 			//dadosReceitas = require(diret);
 			//dadosReceitas = inside_data;
 			dadosReceitas = JSON.parse(dadosReceitas);
@@ -434,7 +435,10 @@ app.get('/receita/edit/:rec', function(req,res) {
 				res.send('Dados inexistentes ou incompletos para '+req.params.rec);
 				return console.error(err);
 			}  
-			dadosReceita = require(diret+'/receita.json');
+			
+			//dadosReceita = require(diret+'/receita.json');
+			dadosReceita = data //obtido no readfile 
+
 			step = 2;
 			//var ultimaReceita = checagem_cookie(req.cookies.ultimaReceita, "Receita", 0);
 			//res.cookie('lastCv', :rec);
@@ -634,14 +638,39 @@ app.get('/recuperar', (req, res) => {
 	}
 })
 
+//painel de controle de admin
 app.get('/admin', (req, res) => {
-	if(req.session.loggedin && req.session.adm == 1){
+
+	if(req.cookies.loggedin && req.cookies.adm == 1){
+		valid = req.cookies.valid
+		
 		logado = true
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1")
 		var size = checagem_cookie(res.cookie.size, "Tamanho", 2)
 		var step = undefined
-		adm = req.session.adm
-		res.render('admin', {style, step, size,	logado, adm})
+		
+		users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+		// var arquivo_users = __dirname + '/public/users.json'
+
+		// fs.readFile(arquivo_users, function (err, users) {
+		// 	if (err) {
+		// 		//res.send('Dados inexistentes ou incompletos para '+req.params.rec);
+		// 		return console.error(err);
+		// 	}
+			
+		// 	console.log(users)
+		// 	users = JSON.parse(users)
+		var nomes = new Array()
+		var count = 0
+		for (count = 0; count< users.length; count++){
+			console.log(users[count])
+			console.log('------')
+			nomes.push(users[count])
+		}
+			//CONTINUANDO
+			res.render('admin', {style, step, size,	logado, nomes})
+		// }) //fim leitura
+	//fim logado  
 	} else {
 		res.redirect('/')
 	}
@@ -654,12 +683,13 @@ app.post('/login', (req, res) => {
 	var step = undefined
 	
 	var username = req.body.email
-  	var password = sha512(req.body.senha, secret)
+  var password = sha512(req.body.senha, secret)
 
 	
     // Authenticate
-    console.log(__dirname + '/public/users.json'	)
+  //console.log(__dirname + '/public/users.json'	)
 	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
 	console.log("iniciando busca")
 	
 	var user = users.find((item) => {
@@ -693,6 +723,7 @@ app.post('/novo_chef', (req, res) => {
 	//     users = JSON.parse(fs.readFileSync(__dirname + '/public/admins.json'))
 	// } else {
 		users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
 	// }
     var user = users.find((item) => {
 //  return (item.username == username && item.password == password)
@@ -707,17 +738,14 @@ app.post('/novo_chef', (req, res) => {
         "password" : password 
     };
 
-    if (req.body.adm == 'on'){
-    	novousuario.adm = 1;
-    	novousuario.valid = 1;
-    } else {
-    	novousuario.adm = 0;
-    	novousuario.valid = 0;
-    }
+    //ninguém começa como adm nem válido
+    novousuario.adm = 0;
+    novousuario.valid = 0;
+  
 
-      users[users.length] = novousuario;
-      console.log("Novo usuario:");
-      console.log(novousuario);
+    users[users.length] = novousuario;
+    console.log("Novo usuario:");
+    console.log(novousuario);
 
       /*
       console.log("Numero de usuarios:");
@@ -762,7 +790,15 @@ app.get('/logout', (req, res) => {
 	req.session.valid = undefined
 
 	res.redirect('/')
+})
+
+app.get('admin/validar/:user', (req,res) => {
+	res.redirect('/')
 }) 
+
+app.get('admin/promover/:user', (req,res) => {
+	res.redirect('/')
+})
 
 //FIM #AT8
 

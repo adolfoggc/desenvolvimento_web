@@ -79,3 +79,12 @@
 </style>
 
 <%- contentFor('script') %>
+<% if(logado == true){ %>
+	setCookie("loggedin", true, 10);
+	setCookie("adm", <%= adm %>, 10);
+	setCookie("valid", <%= valid %>, 10);
+<% } else { %>
+	setCookie("loggedin", false, 10);
+	setCookie("adm", 0, 10);
+	setCookie("valid", undefined, 10);
+<% }%>
