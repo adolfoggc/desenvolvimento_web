@@ -60,7 +60,7 @@
 				 	<% } %> 
 				</div><!-- NOTA -->
 	    	<br><br>
-	    	<% if(logado == true) { %>
+	    	<% if(logado == true && valid == 1) { %>
 		    	<a href=<%= "receita/edit/"+ receitas[count] %> >Editar</a>
 		    	<br>
 		    	<a href=<%= "apagar/"+ receitas[count] %> onclick="return confirm('Tem certeza que quer apagar esta receita?');">Apagar</a>

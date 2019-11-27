@@ -23,7 +23,7 @@
             <li>
               <a class="botao_fake" href="/">Receitas</a>
             </li>
-            <% if(logado == true) { %>
+            <% if(logado == true && valid == 1) { %>
               <li>
                 <a class="botao_fake" href="/nova_receita">Nova Receita</a>
               </li>
@@ -53,7 +53,7 @@
     <div class="container">
       <% if(valid == 0){%>
         <div class="alert">
-          Você está logado! No entando, sua conta não foi validada!
+          Sua conta tem de ser validada para inserir novas receitas!
         </div>
       <% } %>
       <%- secao %>

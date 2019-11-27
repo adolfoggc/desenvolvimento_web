@@ -1,4 +1,49 @@
+<!DOCTYPE html>
 <%- contentFor('secao') %>
-aaa
+	<form style="width: 50%; text-align: center; margin: auto;" action="/novo_chef" method="POST">
+  	<img class="mb-4" src="/imagens/logo/logo_140.png" alt="" width="140px" height="140px">
+    
+    <h1 class="h3 mb-3 font-weight-normal">Nova Senha</h1>
+    
+    <label for="inputEmail" class="sr-only">Usuário</label>
+    
+    <input id="inputEmail" class="form-control" placeholder="Seu username" required autofocus name="email">
+      
+    <label for="inputPassword" class="sr-only">Senha</label>
+    
+    <input type="password" id="inputPassword" class="form-control" placeholder="Senha" required name="senha">
+    
+    <div class="checkbox">
+    	
+    </div>
+
+    <button class="btn" type="submit">
+    	Login
+    </button>
+  </form>
+<style>
+	input {
+		line-height: 2em;
+		font-height: 2em;
+	}
+
+	img {
+		margin: auto;
+		display: block;
+	}
+
+	form {
+		text-align: center;
+	}
+
+	.checkbox {
+		display: block;
+		margin: .5em 0;
+	}
+
+	.btn {
+		margin: 1em 0;
+	}
+</style>
 
 <%- contentFor('script') %>

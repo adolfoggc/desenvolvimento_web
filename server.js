@@ -281,6 +281,7 @@ function apagar_arquivos(caminho,fs, arquivos) {
 //coisas sérias
 
 app.get('/', (req, res) => {
+	
 	//path de arquivos de receitas
 	var pasta_receitas = path.join(__dirname+'/public/receitas')
 	//contagem de arquivos na pasta
@@ -330,12 +331,9 @@ app.get('/', (req, res) => {
 			console.log("===============================");
 			step = undefined;
 			//AT8
-			logado = false;
-			if(req.session.loggedin){
-				logado = true;
-			}
-			adm = req.session.adm
-			valid = req.session.valid
+			logado = req.cookies.loggedin
+			adm = req.cookies.adm
+			valid = req.cookies.valid
 			logged_data(req)
 			
 			//FIM AT8
@@ -424,7 +422,6 @@ app.get('/receita/:rec', function(req,res) {
 
 app.get('/receita/edit/:rec', function(req,res) {
 	if(req.session.loggedin){
-
 		// Carrega cookies de preferências (cookie, nome, valor padrão)
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
@@ -549,7 +546,7 @@ app.post('/create', function(req,res) {
 });//fim create
 
 app.get('/nova_receita', function(req,res) {
-	if(req.session.loggedin) {
+		if(req.cookies.loggedin && (req.cookies.valid == 1)) {
 		var style = checagem_cookie(req.cookies.style, "Estilo", "style_1");
 		var size = checagem_cookie(req.cookies.size, "Tamanho", 2);
 		step = 2;
@@ -658,17 +655,22 @@ app.get('/admin', (req, res) => {
 		// 		return console.error(err);
 		// 	}
 			
-		// 	console.log(users)
+		console.log(users)
 		// 	users = JSON.parse(users)
 		var nomes = new Array()
+		var validation = new Array()
+		var admins = new Array()
 		var count = 0
 		for (count = 0; count< users.length; count++){
 			console.log(users[count])
 			console.log('------')
-			nomes.push(users[count])
+			nomes.push(users[count].username)
+			validation.push(users[count].valid)
+			admins.push(users[count].adm)
+
 		}
 			//CONTINUANDO
-			res.render('admin', {style, step, size,	logado, nomes})
+			res.render('admin', {style, step, size,	logado, nomes, validation, admins})
 		// }) //fim leitura
 	//fim logado  
 	} else {
@@ -708,6 +710,8 @@ app.post('/login', (req, res) => {
     	console.log('Nem te conheço!')
     	res.redirect('/login')
 	}
+
+
 })
 
 app.post('/novo_chef', (req, res) => {
@@ -792,12 +796,136 @@ app.get('/logout', (req, res) => {
 	res.redirect('/')
 })
 
-app.get('admin/validar/:user', (req,res) => {
-	res.redirect('/')
+app.get('/admin/validar/:user', (req,res) => {
+	username = req.params.user
+	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
+	console.log("iniciando busca")
+
+	var user = users.find((item) => {
+		return (item.username == username)
+	})
+    
+  if (user != undefined) {
+    //user encontrado
+    posicao = users.indexOf(user)
+		usuario = {
+      "username" : user.username,
+      "password" : user.password,
+	    "adm" : user.adm,
+	    "valid" : 1
+    }
+  
+    users[posicao] = usuario;
+    console.log(usuario);
+
+		data = JSON.stringify(users);
+		fs.writeFileSync(__dirname + '/public/users.json', data)
+  } else {
+  	//user não encontrado
+  	console.log('Usuário inexistente')
+	}
+	//buscar por user
+	res.redirect('/admin')
+	username = req.params.user
+	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
+	console.log("iniciando busca")
+
+	var user = users.find((item) => {
+		return (item.username == username)
+	})
+    
+  if (user != undefined) {
+    //user encontrado
+    posicao = users.indexOf(user)
+		usuario = {
+      "username" : user.username,
+      "password" : user.password,
+	    "adm" : user.adm,
+	    "valid" : 1
+    }
+  
+    users[posicao] = usuario;
+    console.log(usuario);
+
+		data = JSON.stringify(users);
+		fs.writeFileSync(__dirname + '/public/users.json', data)
+  } else {
+  	//user não encontrado
+  	console.log('Usuário inexistente')
+	}
+	//buscar por user
+	res.redirect('/admin')
+
 }) 
 
-app.get('admin/promover/:user', (req,res) => {
-	res.redirect('/')
+	
+
+app.get('/admin/promover/:user', (req,res) => {
+	username = req.params.user
+	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
+	console.log("iniciando busca")
+
+	var user = users.find((item) => {
+		return (item.username == username)
+	})
+    
+  if (user != undefined) {
+    //user encontrado
+    posicao = users.indexOf(user)
+		usuario = {
+      "username" : user.username,
+      "password" : user.password,
+	    "adm" : 1,
+	    "valid" : user.valid
+    }
+  
+    users[posicao] = usuario;
+    console.log(usuario);
+
+		data = JSON.stringify(users);
+		fs.writeFileSync(__dirname + '/public/users.json', data)
+  } else {
+  	//user não encontrado
+  	console.log('Usuário inexistente')
+	}
+	//buscar por user
+	res.redirect('/admin')
+})
+
+app.get('/admin/remover/:user', (req,res) => {
+	username = req.params.user
+	var users = JSON.parse(fs.readFileSync(__dirname + '/public/users.json'))
+
+	console.log("iniciando busca")
+
+	var user = users.find((item) => {
+		return (item.username == username)
+	})
+    
+  if (user != undefined) {
+    //user encontrado
+    posicao = users.indexOf(user)
+		usuario = {
+      "username" : user.username,
+      "password" : user.password,
+	    "adm" : user.adm,
+	    "valid" : -1
+    }
+  
+    users[posicao] = usuario;
+    console.log(usuario);
+
+		data = JSON.stringify(users);
+		fs.writeFileSync(__dirname + '/public/users.json', data)
+  } else {
+  	//user não encontrado
+  	console.log('Usuário inexistente')
+	}
+	//buscar por user
+	res.redirect('/admin')
 })
 
 //FIM #AT8

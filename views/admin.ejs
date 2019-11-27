@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <%- contentFor('secao') %>
+
 <table>
 	<tr>
 		<th>Usuario</th>
-		<th>Validar</th>
-		<th>Tornar Adm</th>
+		<th>Validação</th>
+		<th>Adm</th>
+		<th>Invalidar</th>
 	</tr>
 	<% var cont = 0 %>
-	
-	<tr>
-		<%# inserir dados %>
-		<td><%= nomes[cont] %></td><td>Bbbbbbb</td><td>Ccccc</td>
-	</tr>
+	<% for(cont= 0; cont< nomes.length; cont++ ){ %>	
+		<tr>
+			<td><%= nomes[cont] %></td>
+			<td>
+				<% if(validation[cont] == 0){ %>		
+					<a href="<%= "/admin/validar/"+nomes[cont] %>">Validar?</a>
+				<% } else { %>
+					VÁLIDO
+				<% } %>
+			</td>
+			<td>
+				<% if(admins[cont] == 0){ %>
+					<a href="<%= "/admin/promover/"+nomes[cont] %>">TORNAR ADMIN</a>
+				<% }else{ %>
+					ADMIN
+				<% } %> 		
+			</td>
+			<td>
+				<a href="<%= "/admin/remover/"+nomes[cont] %>">SIM</a></td>
+		</tr>
+	<% } %>
 
 </table>
 
